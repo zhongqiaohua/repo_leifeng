@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ResponseBody
 @RequestMapping("/priceInfo")
 public class PriceInfoController {
-    
+    //test
 }
