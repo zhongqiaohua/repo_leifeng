@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.leifeng.dao.EmployeeinfoMapper">
+  <resultMap id="BaseResultMap" type="com.example.leifeng.models.Employeeinfo">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="employee_user_id" jdbcType="VARCHAR" property="employeeUserId" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="employee_phone" jdbcType="VARCHAR" property="employeePhone" />
+    <result column="employee_company" jdbcType="VARCHAR" property="employeeCompany" />
+    <result column="employee_openid" jdbcType="VARCHAR" property="employeeOpenid" />
+    <result column="employee_level" jdbcType="INTEGER" property="employeeLevel" />
+    <result column="free_charge" jdbcType="INTEGER" property="freeCharge" />
+    <result column="sms" jdbcType="VARCHAR" property="sms" />
+    <result column="sms_time" jdbcType="VARCHAR" property="smsTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+      id, employee_user_id, password,
+      employee_phone, employee_company, employee_openid,
+      employee_level, free_charge, sms,
+      sms_time
+  </sql>
+  <!---->
+  <delete id="delById">
+    DELETE FROM EmployeeInfo WHERE id= #{param1}
+  </delete>
+  <!---->
+  <select id="count"  resultType="int">
+    SELECT COUNT(*) FROM EmployeeInfo
+  </select>
+  <!---->
+  <select id="selectAll"  resultMap="BaseResultMap">
+    SELECT id
+          ,employee_user_id
+          ,password
+          ,employee_phone
+          ,employee_company
+          ,employee_openid
+          ,employee_level
+          ,free_charge
+          ,sms
+          ,sms_time
+      FROM EmployeeInfo
+      <if test="param3 != null" >
+        <where>employee_user_id like CONCAT('%',#{param3},'%')</where>
+      </if>
+      <if test="param4 != null" >
+        <where>employee_company like CONCAT('%',#{param4},'%')</where>
+      </if>
+      <if test="param3 == null and param4 == null">
+        ORDER BY id   offset #{param2}*#{param1} rows fetch next #{param2} rows only
+      </if>
+  </select>
+  <!---->
+  <select id="multiConditionSelect"  resultMap="BaseResultMap">
+    SELECT id
+          ,employee_user_id
+          ,password
+          ,employee_phone
+          ,employee_company
+          ,employee_openid
+          ,employee_level
+          ,free_charge
+          ,sms
+          ,sms_time
+      FROM EmployeeInfo
+      WHERE employee_user_id like CONCAT('%',#{param3},'%') AND employee_company like CONCAT('%',#{param4},'%')
+  </select>
+  <!---->
+  <select id="selectById" parameterType="int" resultMap="BaseResultMap">
+    SELECT id
+    ,employee_user_id
+    ,password
+    ,employee_phone
+    ,employee_company
+    ,employee_openid
+    ,employee_level
+    ,free_charge
+    ,sms
+    ,sms_time
+    FROM EmployeeInfo WHERE id = id ORDER BY id
+  </select>
+  <!---->
+  <insert id="insert" parameterType="com.example.leifeng.models.Employeeinfo">
+    insert into EmployeeInfo (employee_user_id, password,
+      employee_phone, employee_company,
+      employee_level, free_charge)
+    values ( #{employeeUserId,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{employeePhone,jdbcType=VARCHAR}, #{employeeCompany,jdbcType=VARCHAR},
+      #{employeeLevel,jdbcType=INTEGER}, #{freeCharge,jdbcType=INTEGER})
+  </insert>
+  <!---->
+  <update id="updateByUserID" parameterType="com.example.leifeng.models.Employeeinfo">
+    UPDATE EmployeeInfo
+    SET
+    password =  #{password,jdbcType=VARCHAR}
+    ,employee_phone = #{employeePhone,jdbcType=VARCHAR}
+    ,employee_level =  #{employeeLevel,jdbcType=INTEGER}
+    ,free_charge =  #{freeCharge,jdbcType=INTEGER}
+    WHERE employee_user_id = #{employeeUserId,jdbcType=VARCHAR}
+  </update>
+  <insert id="insertSelective" parameterType="com.example.leifeng.models.Employeeinfo">
+    insert into EmployeeInfo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="employeeUserId != null">
+        employee_user_id,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="employeePhone != null">
+        employee_phone,
+      </if>
+      <if test="employeeCompany != null">
+        employee_company,
+      </if>
+      <if test="employeeOpenid != null">
+        employee_openid,
+      </if>
+      <if test="employeeLevel != null">
+        employee_level,
+      </if>
+      <if test="freeCharge != null">
+        free_charge,
+      </if>
+      <if test="sms != null">
+        sms,
+      </if>
+      <if test="smsTime != null">
+        sms_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="employeeUserId != null">
+        #{employeeUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="employeePhone != null">
+        #{employeePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeCompany != null">
+        #{employeeCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeOpenid != null">
+        #{employeeOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeLevel != null">
+        #{employeeLevel,jdbcType=INTEGER},
+      </if>
+      <if test="freeCharge != null">
+        #{freeCharge,jdbcType=INTEGER},
+      </if>
+      <if test="sms != null">
+        #{sms,jdbcType=VARCHAR},
+      </if>
+      <if test="smsTime != null">
+        #{smsTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!--<select id="selectAll" resultType="com.example.leifeng.models.Employeeinfo">-->
+    <!--SELECT * FROM EmployeeInfo-->
+  <!--</select>-->
+</mapper>

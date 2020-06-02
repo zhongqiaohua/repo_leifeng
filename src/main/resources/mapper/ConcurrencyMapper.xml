@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.leifeng.dao.ConcurrencyMapper">
+  <resultMap id="BaseResultMap" type="com.example.leifeng.models.Concurrency">
+    <result column="date" jdbcType="VARCHAR" property="date" />
+    <result column="maxUserNumber" jdbcType="INTEGER" property="maxusernumber" />
+    <result column="maxUserTime" jdbcType="VARCHAR" property="maxusertime" />
+  </resultMap>
+  <insert id="insert" parameterType="com.example.leifeng.models.Concurrency">
+    insert into Concurrency (date, maxUserNumber, maxUserTime
+      )
+    values (#{date,jdbcType=VARCHAR}, #{maxusernumber,jdbcType=INTEGER}, #{maxusertime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.leifeng.models.Concurrency">
+    insert into Concurrency
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="date != null">
+        date,
+      </if>
+      <if test="maxusernumber != null">
+        maxUserNumber,
+      </if>
+      <if test="maxusertime != null">
+        maxUserTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="date != null">
+        #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="maxusernumber != null">
+        #{maxusernumber,jdbcType=INTEGER},
+      </if>
+      <if test="maxusertime != null">
+        #{maxusertime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

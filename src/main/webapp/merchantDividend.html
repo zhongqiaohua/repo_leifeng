@@ -1,0 +1,106 @@
+<html>
+<body>
+<link rel="stylesheet" href="plugins/layui/css/layui.css" media="all">
+<script src="plugins/layui/layui.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<div class="layui-col-sm6">
+    <form class="layui-form" action="">
+        <div class="layui-form-item layui-col-md3">
+            <label class="layui-form-label">商户名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="shUserId" id="shUserId" required lay-verify="required" autocomplete="off"
+                       class="layui-input" style="border:none;" readonly />
+            </div>
+        </div>
+        <div class="layui-form-item layui-col-md3">
+            <label class="layui-form-label">商户比例</label>
+            <div class="layui-input-inline">
+                <input type="text" name="shPaymentRatio0" id="shPaymentRatio0" required lay-verify="required" autocomplete="off"
+                       class="layui-input" style="border:none;" readonly />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">分红人A</label>
+            <div class="layui-input-inline">
+                <select name="shUserIdA"  id="shUserIdA" class="shUserId" lay-filter="noshUserId" lay-search="">
+                    <option value="">请先去分红人账号添加</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">分红比例</label>
+            <div class="layui-input-inline">
+                <input type="text" name="shPaymentRatioA" id="shPaymentRatioA" required lay-verify="" autocomplete="off"
+                       class="layui-input"   />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">分红人B</label>
+            <div class="layui-input-inline">
+                <select name="shUserIdB"  id="shUserIdB" class="shUserId" lay-filter="noshUserId" lay-search="">
+                    <option value="">请先去分红人账号添加</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">分红比例</label>
+            <div class="layui-input-inline">
+                <input type="text" name="shPaymentRatioB" id="shPaymentRatioB" required lay-verify="" autocomplete="off"
+                       class="layui-input"   />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    //Demo
+    layui.use('form', function () {
+        var form = layui.form;
+        var index = parent.layer.getFrameIndex(window.name);
+        var $ = layui.jquery, layer = layui.layer;
+        var RshUserId = '分红人';//此处保留分红人 因分红人已分组
+        // 商户
+        $.get("/lf/Deviceinfo/linkageShUserId?shUserId="+RshUserId, function (data) {
+            for (var i = 0; i < data.length; i++) {
+                var option = "<option value='" + data[i] + "'>" + data[i] + "</option>";
+                $("select[name=shUserIdA]").append(option);
+                $("select[name=shUserIdB]").append(option);
+            }
+            layui.form.render('select', 'devFrom');
+            form.render('select');
+            return false;
+        });
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            var shUserIdA=null,shPaymentRatioA=0,shUserIdB=null,shPaymentRatioB=0;
+            if(data.field.shUserIdA!== "")
+                shUserIdA=data.field.shUserIdA;
+            if(data.field.shPaymentRatioA!== "")
+                shPaymentRatioA=data.field.shPaymentRatioA;
+            if(data.field.shUserIdB!== "")
+                shUserIdB=data.field.shUserIdB;
+            if(data.field.shPaymentRatioB!== "")
+                shPaymentRatioB=data.field.shPaymentRatioB;
+            $.ajax({
+                url: '/lf/user/updateDividend',
+                type: "get",
+                data:"shUserId="+data.field.shUserId
+                +"&shUserIdA="+shUserIdA
+                +"&shPaymentRatioA="+shPaymentRatioA
+                +"&shUserIdB="+shUserIdB
+                +"&shPaymentRatioB="+shPaymentRatioB,
+                success: function(suc) {
+
+                }
+            });
+            parent.layer.close(index);
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.leifeng.dao.DiscountinfoMapper">
+  <resultMap id="BaseResultMap" type="com.example.leifeng.models.Discountinfo">
+    <result column="sh_code" jdbcType="INTEGER" property="shCode" />
+    <result column="dev_type" jdbcType="INTEGER" property="devType" />
+    <result column="sh_user_id" jdbcType="VARCHAR" property="shUserId" />
+    <result column="discount_time_start" jdbcType="VARCHAR" property="discountTimeStart" />
+    <result column="discount_time_end" jdbcType="VARCHAR" property="discountTimeEnd" />
+    <result column="discount_number" jdbcType="INTEGER" property="discountNumber" />
+    <result column="network" jdbcType="VARCHAR" property="network" />
+    <result column="id" jdbcType="INTEGER" property="id" />
+  </resultMap>
+  <insert id="insert" parameterType="com.example.leifeng.models.Discountinfo">
+    insert into DiscountInfo (sh_code, dev_type, sh_user_id,
+      discount_time_start, discount_time_end, discount_number,
+      network, id)
+    values (#{shCode,jdbcType=INTEGER}, #{devType,jdbcType=INTEGER}, #{shUserId,jdbcType=VARCHAR},
+      #{discountTimeStart,jdbcType=VARCHAR}, #{discountTimeEnd,jdbcType=VARCHAR}, #{discountNumber,jdbcType=INTEGER},
+      #{network,jdbcType=VARCHAR}, #{id,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.leifeng.models.Discountinfo">
+    insert into DiscountInfo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="shCode != null">
+        sh_code,
+      </if>
+      <if test="devType != null">
+        dev_type,
+      </if>
+      <if test="shUserId != null">
+        sh_user_id,
+      </if>
+      <if test="discountTimeStart != null">
+        discount_time_start,
+      </if>
+      <if test="discountTimeEnd != null">
+        discount_time_end,
+      </if>
+      <if test="discountNumber != null">
+        discount_number,
+      </if>
+      <if test="network != null">
+        network,
+      </if>
+      <if test="id != null">
+        id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="shCode != null">
+        #{shCode,jdbcType=INTEGER},
+      </if>
+      <if test="devType != null">
+        #{devType,jdbcType=INTEGER},
+      </if>
+      <if test="shUserId != null">
+        #{shUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="discountTimeStart != null">
+        #{discountTimeStart,jdbcType=VARCHAR},
+      </if>
+      <if test="discountTimeEnd != null">
+        #{discountTimeEnd,jdbcType=VARCHAR},
+      </if>
+      <if test="discountNumber != null">
+        #{discountNumber,jdbcType=INTEGER},
+      </if>
+      <if test="network != null">
+        #{network,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -1,0 +1,131 @@
+<html>
+<body>
+<link rel="stylesheet" href="plugins/layui/css/layui.css" media="all">
+<script src="plugins/layui/layui.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<div class="layui-col-sm6">
+    <form class="layui-form" action="">
+        <div class="layui-form-item layui-col-md3">
+            <label class="layui-form-label">设备编号</label>
+            <div class="layui-input-inline">
+                    <textarea id="deviceIds" name="deviceIds" type="text/plain"  readonly></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属商户</label>
+            <div class="layui-input-inline">
+                <select name="shUserId"  id="shUserId"  class="shUserId" lay-filter="noshUserId" lay-search="">
+                    <option value="">商户</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属网点</label>
+            <div class="layui-input-inline">
+                <select name="network"  lay-search="" id="network">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button class="layui-btn layui-btn-danger" lay-submit id="formPut">设备解绑</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    //Demo
+    layui.use('form', function () {
+        var form = layui.form;
+        var index = parent.layer.getFrameIndex(window.name);
+        var $ = layui.jquery, layer = layui.layer;
+        var RshUserId = "雷风";
+        // 商户
+        $.get("/lf/Deviceinfo/linkageShUserId?shUserId="+RshUserId, function (data) {
+            for (var i = 0; i < data.length; i++) {
+                var option = "<option value='" + data[i] + "'>" + data[i] + "</option>";
+                $("select[name=shUserId]").append(option);
+            }
+            layui.form.render('select', 'devFrom');
+            form.render('select');
+            return false;
+        });
+        //商户值发生变化事件
+        form.on('select(noshUserId)', function(data){
+            var shUserId =$("#shUserId").val();
+            $.ajax({
+                url: "/lf/Deviceinfo/linkageNetwork?shUserId="+shUserId,//带参数将这个传到后台条件查询方法里面
+                type: "post",
+                dataType : "json",
+                contentType : "application/json",
+                async: false,//同步
+                success: function (result) {
+                    if(result.length==0){
+                        var opt = "<option value=\"\">该商户无网点</option>";
+                        $("select[name=network]").append(opt);
+                    }
+                    else{
+                        var opt = "<option value=\"\">网点</option>";
+                        $("select[name=network]").append(opt);
+                        for (var i = 0; i < result.length; i++) {
+                            var option = "<option value='" + result[i] + "'>" + result[i] + "</option>";
+                            $("select[name=network]").append(option);
+                        }
+                    }
+                    layui.form.render('select', 'devFrom');
+                }
+            });
+            form.render('select');//最后记得渲染
+            return false;
+        });
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            var deviceIds = JSON.parse(data.field.deviceIds);
+            if(data.field.shUserId === ''){
+                layer.msg("请选择商家");
+                return false;
+            }
+            if(data.field.network === ''){
+                layer.msg('请选择网点');
+                return false;
+            }
+            // String[] deviceIds=data.field.deviceIds.split(",");
+            $.ajax({
+                url: '/lf/Deviceinfo/deviceinfoMultiEdit',//?&deviceId='+data.field.deviceIds+'&shUserId='+data.field.shUserId+'&network'+data.field.network,
+                type: "get",
+                data:{"deviceId":deviceIds,"shUserId":data.field.shUserId,"network":data.field.network},
+                contentType:"application/json",
+                traditional:true,//是否使用传统的方式浅层序列化
+                dataType:'json',
+                async: true,
+                success: function(suc) {
+                    parent.layer.close(index);
+                }
+            });
+        });
+        $("#formPut").on("click",function () {
+            var deviceIds =JSON.parse($("#deviceIds").val());
+            layer.msg('解绑设备：'+deviceIds, {
+                time: 20000, //20s后自动关闭
+                btn: ['知道了']
+            });
+            $.ajax({
+                url: '/lf/Deviceinfo/deviceinfoMultiEdit',//?&deviceId='+data.field.deviceIds+'&shUserId='+data.field.shUserId+'&network'+data.field.network,
+                type: "get",
+                data:{"deviceId":deviceIds,"shUserId":"雷风","network":"解绑"},
+                contentType:"application/json",
+                traditional:true,//是否使用传统的方式浅层序列化
+                dataType:'json',
+                async: true,
+                success: function(suc) {
+                    parent.layer.close(index);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

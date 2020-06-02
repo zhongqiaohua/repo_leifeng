@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.leifeng.dao.DeviceinfoMapper">
+  <resultMap id="BaseResultMap" type="com.example.leifeng.models.Deviceinfo">
+    <result column="sh_code" jdbcType="INTEGER" property="shCode" />
+    <result column="dev_code" jdbcType="INTEGER" property="devCode" />
+    <result column="dev_type" jdbcType="INTEGER" property="devType" />
+    <result column="dev_pass" jdbcType="VARCHAR" property="devPass" />
+    <result column="control_url" jdbcType="VARCHAR" property="controlUrl" />
+    <result column="control_id" jdbcType="VARCHAR" property="controlId" />
+    <result column="control_port" jdbcType="INTEGER" property="controlPort" />
+    <result column="control_pass" jdbcType="VARCHAR" property="controlPass" />
+    <result column="sh_user_id" jdbcType="VARCHAR" property="shUserId" />
+    <result column="device_province_address" jdbcType="VARCHAR" property="deviceProvinceAddress" />
+    <result column="device_city_address" jdbcType="VARCHAR" property="deviceCityAddress" />
+    <result column="device_area_address" jdbcType="VARCHAR" property="deviceAreaAddress" />
+    <result column="breakdown" jdbcType="VARCHAR" property="breakdown" />
+    <result column="network" jdbcType="VARCHAR" property="network" />
+    <result column="deviceid" jdbcType="INTEGER" property="deviceid" />
+    <result column="callbackData" jdbcType="VARCHAR" property="callbackdata" />
+    <result column="chargeType" jdbcType="INTEGER" property="chargetype" />
+    <result column="chargePower" jdbcType="INTEGER" property="chargepower" />
+    <result column="actualVoltage" jdbcType="INTEGER" property="actualvoltage" />
+    <result column="voltageStandard" jdbcType="INTEGER" property="voltagestandard" />
+    <result column="chargeCurrent" jdbcType="INTEGER" property="chargecurrent" />
+    <result column="chargeState" jdbcType="INTEGER" property="chargestate" />
+    <result column="chargePresetTime" jdbcType="INTEGER" property="chargepresettime" />
+    <result column="chargeRemainingTime" jdbcType="INTEGER" property="chargeremainingtime" />
+    <result column="scaleOfFees" jdbcType="INTEGER" property="scaleoffees" />
+    <result column="havePayMoney" jdbcType="INTEGER" property="havepaymoney" />
+    <result column="userid" jdbcType="VARCHAR" property="userid" />
+    <result column="haveChargeTime" jdbcType="INTEGER" property="havechargetime" />
+    <result column="usedMoney" jdbcType="INTEGER" property="usedmoney" />
+    <result column="online" jdbcType="INTEGER" property="online" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="updatePrice" jdbcType="INTEGER" property="updateprice" />
+    <result column="openid" jdbcType="VARCHAR" property="openid" />
+    <result column="updateStateTime" jdbcType="VARCHAR" property="updatestatetime" />
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="device_install_date" jdbcType="VARCHAR" property="deviceInstallDate" />
+    <result column="device_address" jdbcType="VARCHAR" property="deviceAddress" />
+    <result column="device_detail_address" jdbcType="VARCHAR" property="deviceDetailAddress" />
+    <result column="online_time" jdbcType="VARCHAR" property="onlineTime" />
+    <result column="dev_step" jdbcType="INTEGER" property="devStep" />
+    <result column="placeid" jdbcType="INTEGER" property="placeid" />
+  </resultMap>
+  <!--批量修改-->
+  <update id="deviceinfoMultiEdit">
+    update DeviceInfo set sh_user_id=#{shUserId},network = #{network},updateStateTime=CONVERT(varchar,GETDATE(),20) WHERE deviceid IN
+    <foreach collection="deviceIds" item="item" index="index" open="(" close=")" separator=",">
+       #{item,jdbcType=INTEGER}
+    </foreach>
+  </update>
+  <!--修改-->
+  <update id="unbindByDeviceid">
+    update DeviceInfo set sh_user_id=#{param2},network = #{param3},updateStateTime=CONVERT(varchar,GETDATE(),20) WHERE deviceid = #{param1};
+  </update>
+  <select id="count" resultType="integer">
+    SELECT COUNT (*) FROM DeviceInfo
+    WHERE  sh_user_id IN(
+    SELECT sh_user_id FROM UserInfo WHERE
+    sh_superior_dealer_0=#{param3} OR sh_superior_dealer_1=#{param3} OR sh_superior_dealer_2=#{param3} OR sh_superior_dealer_3=#{param3} OR sh_user_id=#{param3})  AND network IS NOT NULL
+  </select>
+  <!--查询所有-->
+  <select id="selectAll" resultMap="BaseResultMap" >
+    SELECT
+    control_id
+    ,sh_user_id
+    ,device_province_address
+    ,device_city_address
+    ,device_area_address
+    ,network
+    ,deviceid
+    ,chargeType
+    ,chargePower
+    ,chargePresetTime
+    ,chargeRemainingTime
+    ,scaleOfFees
+    ,havePayMoney
+    ,userid
+    ,haveChargeTime
+    ,usedMoney
+    ,online
+    ,version
+    ,updateStateTime
+    ,device_detail_address
+    ,placeid
+    FROM DeviceInfo
+    WHERE sh_user_id IN(
+    SELECT sh_user_id FROM UserInfo WHERE
+    sh_superior_dealer_0=#{param3} OR sh_superior_dealer_1=#{param3} OR sh_superior_dealer_2=#{param3} OR sh_superior_dealer_3=#{param3}  OR sh_user_id=#{param3}) AND network IS NOT NULL
+    ORDER BY sh_user_id,network,deviceid   offset #{param2}* #{param1} rows fetch next #{param2} rows only
+
+    <!--<if test="param3 != null" >-->
+      <!--<where>employee_user_id like CONCAT('%',#{param3},'%')</where>-->
+    <!--</if>-->
+    <!--<if test="param4 != null" >-->
+      <!--<where>employee_company like CONCAT('%',#{param4},'%')</where>-->
+    <!--</if>
+    <if test="param3 == null and param4 == null">
+     </if>-->
+  </select>
+
+  <!--模糊查询/单条件多参数查询-->
+  <!--统计-->
+  <select id="searchCount" resultType="integer">
+    SELECT COUNT (*) FROM DeviceInfo WHERE 1=1
+    <if test="param1 != null" >
+      AND deviceid like CONCAT('%',#{param1},'%')
+    </if>
+    <if test="param2 != null" >
+      AND control_id like CONCAT('%',#{param2},'%')
+    </if>
+    <if test="param3 != null" >
+      AND device_detail_address like CONCAT('%',#{param3},'%')
+    </if>
+    <if test="param4 != null" >
+      AND userid like CONCAT('%',#{param4},'%')
+    </if>
+      AND sh_user_id IN (SELECT sh_user_id FROM UserInfo
+      WHERE sh_user_id IS NOT NULL AND sh_superior_dealer_0=#{param5} OR sh_superior_dealer_1=#{param5} OR sh_superior_dealer_2=#{param5} OR sh_superior_dealer_3=#{param5} OR sh_user_id=#{param5})
+  </select>
+
+  <select id="search" resultMap="BaseResultMap" >
+    SELECT
+    control_id
+    ,sh_user_id
+    ,device_province_address
+    ,device_city_address
+    ,device_area_address
+    ,network
+    ,deviceid
+    ,chargeType
+    ,chargePower
+    ,chargePresetTime
+    ,chargeRemainingTime
+    ,scaleOfFees
+    ,havePayMoney
+    ,userid
+    ,haveChargeTime
+    ,usedMoney
+    ,online
+    ,version
+    ,updateStateTime
+    ,device_detail_address
+    ,placeid
+    FROM DeviceInfo
+    <if test="param3 != null" >
+      <where>deviceid like CONCAT('%',#{param3},'%')</where>
+    </if>
+    <if test="param4 != null" >
+      <where>control_id like CONCAT('%',#{param4},'%')</where>
+    </if>
+    <if test="param5 != null" >
+      <where>device_detail_address like CONCAT('%',#{param5},'%')</where>
+    </if>
+    <if test="param6 != null" >
+      <where>userid like CONCAT('%',#{param6},'%')</where>
+    </if>
+    AND sh_user_id IN (SELECT sh_user_id FROM UserInfo
+    WHERE sh_user_id IS NOT NULL AND sh_superior_dealer_0=#{param7} OR sh_superior_dealer_1=#{param7} OR sh_superior_dealer_2=#{param7} OR sh_superior_dealer_3=#{param7} OR sh_user_id=#{param7})
+    ORDER BY sh_user_id,network,deviceid   offset #{param2}* #{param1} rows fetch next #{param2} rows only
+  </select>
+
+  <!--联动查询下属商户商户-->
+  <select id="linkageShUserId" resultType="String">
+    SELECT sh_user_id FROM UserInfo
+    WHERE sh_user_id IS NOT NULL AND  sh_superior_dealer_0=#{param} OR sh_superior_dealer_1=#{param} OR sh_superior_dealer_2=#{param} OR sh_superior_dealer_3=#{param} OR sh_user_id=#{param}
+  </select>
+  <!--联动查询下属商户网点-->
+  <select id="linkageNetwork" resultType="String">
+    SELECT network FROM PriceInfo WHERE sh_user_id in(SELECT sh_user_id FROM UserInfo
+    WHERE network IS NOT NULL AND sh_superior_dealer_0=#{param1} OR sh_superior_dealer_1=#{param1}
+	OR sh_superior_dealer_2=#{param1} OR sh_superior_dealer_3=#{param1}) OR sh_user_id=#{param1}
+  </select>
+  <!--单条件或多条件查询-->
+  <select id="multiconditionalSearchCount" resultType="integer">
+    SELECT COUNT (*) FROM DeviceInfo
+    WHERE 1=1
+    <if test="param2 != null" >
+      AND network = #{param2}
+    </if>
+    <if test="param3 != null" >
+      <if test="param3 == 2">
+        AND online = 2
+      </if>
+      <if test="param3 == 0">
+        AND online IN (0,1)
+      </if>
+    </if>
+    <if test="param4 != null" >
+      <if test="param4 ==3" >
+        AND chargeType IN  (1,2)
+      </if>
+      <if test="param4 != 3">
+        AND chargeType = #{param4}
+      </if>
+    </if>
+    <if test="param1 != null" >
+      AND sh_user_id IN (SELECT sh_user_id FROM UserInfo
+      WHERE sh_user_id IS NOT NULL AND sh_superior_dealer_0=#{param1} OR sh_superior_dealer_1=#{param1} OR sh_superior_dealer_2=#{param1} OR sh_superior_dealer_3=#{param1} OR sh_user_id=#{param1})
+    </if>
+    <if test="param1==null">
+      AND sh_user_id IN (SELECT sh_user_id FROM UserInfo
+      WHERE sh_user_id IS NOT NULL AND sh_superior_dealer_0=#{param5} OR sh_superior_dealer_1=#{param5} OR sh_superior_dealer_2=#{param5} OR sh_superior_dealer_3=#{param5} OR sh_user_id=#{param5})
+    </if>
+  </select>
+
+  <select id="multiconditionalSearch" resultMap="BaseResultMap" >
+    SELECT
+    control_id
+    ,sh_user_id
+    ,device_province_address
+    ,device_city_address
+    ,device_area_address
+    ,network
+    ,deviceid
+    ,chargeType
+    ,chargePower
+    ,chargePresetTime
+    ,chargeRemainingTime
+    ,scaleOfFees
+    ,havePayMoney
+    ,userid
+    ,haveChargeTime
+    ,usedMoney
+    ,online
+    ,version
+    ,updateStateTime
+    ,device_detail_address
+    ,placeid
+    FROM DeviceInfo
+    WHERE 1=1
+    <if test="param4 != null" >
+      AND network = #{param4}
+    </if>
+    <if test="param5 != null" >
+      <if test="param5 == 2">
+        AND online = 2
+      </if>
+      <if test="param5== 0">
+        AND online IN (0,1)
+      </if>
+    </if>
+    <if test="param6 != null" >
+      <if test="param6 ==3" >
+        AND chargeType IN  (1,2)
+      </if>
+      <if test="param6 != 3" >
+        AND chargeType = #{param6}
+      </if>
+    </if>
+    <if test="param3==null">
+      AND sh_user_id IN (SELECT sh_user_id FROM UserInfo
+      WHERE sh_user_id IS NOT NULL AND sh_superior_dealer_0=#{param7} OR sh_superior_dealer_1=#{param7} OR sh_superior_dealer_2=#{param7} OR sh_superior_dealer_3=#{param7} OR sh_user_id=#{param7})
+    </if>
+    <if test="param3 != null" >
+      AND sh_user_id IN (SELECT sh_user_id FROM UserInfo
+      WHERE sh_user_id IS NOT NULL AND sh_superior_dealer_0=#{param3} OR sh_superior_dealer_1=#{param3} OR sh_superior_dealer_2=#{param3} OR sh_superior_dealer_3=#{param3} OR sh_user_id=#{param3})
+    </if>
+    ORDER BY sh_user_id,network,deviceid   offset #{param2}* #{param1} rows fetch next #{param2} rows only
+  </select>
+  <insert id="insert" parameterType="com.example.leifeng.models.Deviceinfo">
+    insert into DeviceInfo (sh_code, dev_code, dev_type,
+      dev_pass, control_url, control_id,
+      control_port, control_pass, sh_user_id,
+      device_province_address, device_city_address,
+      device_area_address, breakdown, network,
+      deviceid, callbackData, chargeType,
+      chargePower, actualVoltage, voltageStandard,
+      chargeCurrent, chargeState, chargePresetTime,
+      chargeRemainingTime, scaleOfFees, havePayMoney,
+      userid, haveChargeTime, usedMoney,
+      online, version, password,
+      updatePrice, openid, updateStateTime,
+      id, device_install_date, device_address,
+      device_detail_address, online_time, dev_step,
+      placeid)
+    values (#{shCode,jdbcType=INTEGER}, #{devCode,jdbcType=INTEGER}, #{devType,jdbcType=INTEGER},
+      #{devPass,jdbcType=VARCHAR}, #{controlUrl,jdbcType=VARCHAR}, #{controlId,jdbcType=VARCHAR},
+      #{controlPort,jdbcType=INTEGER}, #{controlPass,jdbcType=VARCHAR}, #{shUserId,jdbcType=VARCHAR},
+      #{deviceProvinceAddress,jdbcType=VARCHAR}, #{deviceCityAddress,jdbcType=VARCHAR},
+      #{deviceAreaAddress,jdbcType=VARCHAR}, #{breakdown,jdbcType=VARCHAR}, #{network,jdbcType=VARCHAR},
+      #{deviceid,jdbcType=INTEGER}, #{callbackdata,jdbcType=VARCHAR}, #{chargetype,jdbcType=INTEGER},
+      #{chargepower,jdbcType=INTEGER}, #{actualvoltage,jdbcType=INTEGER}, #{voltagestandard,jdbcType=INTEGER},
+      #{chargecurrent,jdbcType=INTEGER}, #{chargestate,jdbcType=INTEGER}, #{chargepresettime,jdbcType=INTEGER},
+      #{chargeremainingtime,jdbcType=INTEGER}, #{scaleoffees,jdbcType=INTEGER}, #{havepaymoney,jdbcType=INTEGER},
+      #{userid,jdbcType=VARCHAR}, #{havechargetime,jdbcType=INTEGER}, #{usedmoney,jdbcType=INTEGER},
+      #{online,jdbcType=INTEGER}, #{version,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{updateprice,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{updatestatetime,jdbcType=VARCHAR},
+      #{id,jdbcType=INTEGER}, #{deviceInstallDate,jdbcType=VARCHAR}, #{deviceAddress,jdbcType=VARCHAR},
+      #{deviceDetailAddress,jdbcType=VARCHAR}, #{onlineTime,jdbcType=VARCHAR}, #{devStep,jdbcType=INTEGER},
+      #{placeid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.leifeng.models.Deviceinfo">
+    insert into DeviceInfo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="shCode != null">
+        sh_code,
+      </if>
+      <if test="devCode != null">
+        dev_code,
+      </if>
+      <if test="devType != null">
+        dev_type,
+      </if>
+      <if test="devPass != null">
+        dev_pass,
+      </if>
+      <if test="controlUrl != null">
+        control_url,
+      </if>
+      <if test="controlId != null">
+        control_id,
+      </if>
+      <if test="controlPort != null">
+        control_port,
+      </if>
+      <if test="controlPass != null">
+        control_pass,
+      </if>
+      <if test="shUserId != null">
+        sh_user_id,
+      </if>
+      <if test="deviceProvinceAddress != null">
+        device_province_address,
+      </if>
+      <if test="deviceCityAddress != null">
+        device_city_address,
+      </if>
+      <if test="deviceAreaAddress != null">
+        device_area_address,
+      </if>
+      <if test="breakdown != null">
+        breakdown,
+      </if>
+      <if test="network != null">
+        network,
+      </if>
+      <if test="deviceid != null">
+        deviceid,
+      </if>
+      <if test="callbackdata != null">
+        callbackData,
+      </if>
+      <if test="chargetype != null">
+        chargeType,
+      </if>
+      <if test="chargepower != null">
+        chargePower,
+      </if>
+      <if test="actualvoltage != null">
+        actualVoltage,
+      </if>
+      <if test="voltagestandard != null">
+        voltageStandard,
+      </if>
+      <if test="chargecurrent != null">
+        chargeCurrent,
+      </if>
+      <if test="chargestate != null">
+        chargeState,
+      </if>
+      <if test="chargepresettime != null">
+        chargePresetTime,
+      </if>
+      <if test="chargeremainingtime != null">
+        chargeRemainingTime,
+      </if>
+      <if test="scaleoffees != null">
+        scaleOfFees,
+      </if>
+      <if test="havepaymoney != null">
+        havePayMoney,
+      </if>
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="havechargetime != null">
+        haveChargeTime,
+      </if>
+      <if test="usedmoney != null">
+        usedMoney,
+      </if>
+      <if test="online != null">
+        online,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="updateprice != null">
+        updatePrice,
+      </if>
+      <if test="openid != null">
+        openid,
+      </if>
+      <if test="updatestatetime != null">
+        updateStateTime,
+      </if>
+      <if test="id != null">
+        id,
+      </if>
+      <if test="deviceInstallDate != null">
+        device_install_date,
+      </if>
+      <if test="deviceAddress != null">
+        device_address,
+      </if>
+      <if test="deviceDetailAddress != null">
+        device_detail_address,
+      </if>
+      <if test="onlineTime != null">
+        online_time,
+      </if>
+      <if test="devStep != null">
+        dev_step,
+      </if>
+      <if test="placeid != null">
+        placeid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="shCode != null">
+        #{shCode,jdbcType=INTEGER},
+      </if>
+      <if test="devCode != null">
+        #{devCode,jdbcType=INTEGER},
+      </if>
+      <if test="devType != null">
+        #{devType,jdbcType=INTEGER},
+      </if>
+      <if test="devPass != null">
+        #{devPass,jdbcType=VARCHAR},
+      </if>
+      <if test="controlUrl != null">
+        #{controlUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="controlId != null">
+        #{controlId,jdbcType=VARCHAR},
+      </if>
+      <if test="controlPort != null">
+        #{controlPort,jdbcType=INTEGER},
+      </if>
+      <if test="controlPass != null">
+        #{controlPass,jdbcType=VARCHAR},
+      </if>
+      <if test="shUserId != null">
+        #{shUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceProvinceAddress != null">
+        #{deviceProvinceAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceCityAddress != null">
+        #{deviceCityAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceAreaAddress != null">
+        #{deviceAreaAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="breakdown != null">
+        #{breakdown,jdbcType=VARCHAR},
+      </if>
+      <if test="network != null">
+        #{network,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceid != null">
+        #{deviceid,jdbcType=INTEGER},
+      </if>
+      <if test="callbackdata != null">
+        #{callbackdata,jdbcType=VARCHAR},
+      </if>
+      <if test="chargetype != null">
+        #{chargetype,jdbcType=INTEGER},
+      </if>
+      <if test="chargepower != null">
+        #{chargepower,jdbcType=INTEGER},
+      </if>
+      <if test="actualvoltage != null">
+        #{actualvoltage,jdbcType=INTEGER},
+      </if>
+      <if test="voltagestandard != null">
+        #{voltagestandard,jdbcType=INTEGER},
+      </if>
+      <if test="chargecurrent != null">
+        #{chargecurrent,jdbcType=INTEGER},
+      </if>
+      <if test="chargestate != null">
+        #{chargestate,jdbcType=INTEGER},
+      </if>
+      <if test="chargepresettime != null">
+        #{chargepresettime,jdbcType=INTEGER},
+      </if>
+      <if test="chargeremainingtime != null">
+        #{chargeremainingtime,jdbcType=INTEGER},
+      </if>
+      <if test="scaleoffees != null">
+        #{scaleoffees,jdbcType=INTEGER},
+      </if>
+      <if test="havepaymoney != null">
+        #{havepaymoney,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="havechargetime != null">
+        #{havechargetime,jdbcType=INTEGER},
+      </if>
+      <if test="usedmoney != null">
+        #{usedmoney,jdbcType=INTEGER},
+      </if>
+      <if test="online != null">
+        #{online,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="updateprice != null">
+        #{updateprice,jdbcType=INTEGER},
+      </if>
+      <if test="openid != null">
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="updatestatetime != null">
+        #{updatestatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="deviceInstallDate != null">
+        #{deviceInstallDate,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceAddress != null">
+        #{deviceAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceDetailAddress != null">
+        #{deviceDetailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="onlineTime != null">
+        #{onlineTime,jdbcType=VARCHAR},
+      </if>
+      <if test="devStep != null">
+        #{devStep,jdbcType=INTEGER},
+      </if>
+      <if test="placeid != null">
+        #{placeid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

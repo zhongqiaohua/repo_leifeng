@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>设备管理</title>
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all">
+</head>
+<body>
+<div class="demoTable" style="margin: 5px">
+    <div class="layui-inline">
+        <input class="layui-input" name="id" id="employeeUserId" autocomplete="off" placeholder="根据名字搜索">
+    </div>
+    --
+    <div class="layui-inline">
+        <input class="layui-input" name="id" id="employeeCompany" autocomplete="off" placeholder="根据商家搜索">
+    </div>
+    <button class="layui-btn reload" data-type="reload">搜索</button>
+    <button class="layui-btn add" lay-event="add">添加员工</button>
+</div>
+<table id="idEmployee" lay-filter="employee"></table>
+<script src="plugins/layui/layui.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+
+        //第一个实例
+        table.render({
+            id:'allemployee'
+            ,elem: '#idEmployee'
+            ,checkbox: true
+            // ,toolbar: '#toolbarDemo'
+            ,url: '/lf/Employee/selectAll' //数据接口
+            ,height: $(document).height() - $('#idEmployee').offset().top - 20
+            ,page: true //开启分页
+            ,limits: [10,20,30]
+            ,limit: 20 //每页默认显示的数量
+            ,cols: [[ //表头
+                 {fixed: 'left',type: 'checkbox'}
+                ,{field: 'id', title: 'ID',width:80, fixed: 'left'}
+                ,{field: 'employeeUserId', title: '姓名', width:150}
+                ,{field: 'password', title: '密码', width:120, sort: true}
+                ,{field: 'employeePhone', title: '电话', width:150}
+                ,{field: 'employeeCompany', title: '所属商户', width:300}
+                ,{field: 'employeeOpenid', title: 'OPENID',width:300}
+                ,{field: 'employeeLevel', title: '员工属性', width: 150, sort: true}
+                ,{field: 'freeCharge', title: '扫码免费', width: 150}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:170,align:'center'}
+            ]],
+            done: function(res, curr, count){
+                //如果是异步请求数据方式，res即为你接口返回的信息。
+                //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                //console.log(res);
+                //得到当前页码
+                //console.log(curr);
+                //得到数据总量
+                //console.log(count);
+                // $(".layui-table-box").find("[data-field='id']").css("display","none");
+
+                $("[data-field='employeeOpenid']").children().each(function(){
+                    if($(this).text() =="" || $(this).text()==null||$(this).text()==undefined){
+                        $(this).text("未绑定")
+                    }else if($(this).text().length>10){
+                        $(this).text("已绑定")
+                    }
+                });
+                $("[data-field='employeeLevel']").children().each(function(){
+                    if($(this).text()=='10'){
+                        $(this).text("非运营员工")
+                    }else if($(this).text()=='9'){
+                        $(this).text("运营员工")
+                    }
+                });
+                $("[data-field='freeCharge']").children().each(function(){
+                    if($(this).text()=='1'){
+                        $(this).text("是")
+                    }else if($(this).text()=='2'){
+                        $(this).text("否")
+                    }
+                });
+
+
+                pageCurr=curr;
+            }
+        });
+        // //工具条
+        table.on('tool(employee)', function(obj) {
+            switch(obj.event) {
+                case 'edit':
+                    var index = layer.open({
+                        type: 2,
+                        title: "编辑员工信息",
+                        area: ['20%', '60%'],
+                        fix: false,
+                        maxmin: true,
+                        shadeClose: true,
+                        shade: 0.4,
+                        // skin: 'layui-layer-rim',
+                        content: 'employeeinfoEdit.html?id=1',
+                        success: function(layero, index){
+                            var openid;
+                            if(obj.data.employeeOpenid =="" || obj.data.employeeOpenid==null||obj.data.employeeOpenid==undefined){
+                                openid = '未绑定';
+                            }else{
+                                openid = obj.data.employeeOpenid;
+                            }
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#id").val(obj.data.id);
+                            body.find("#employeeUserId").val(obj.data.employeeUserId);
+                            body.find("#password").val(obj.data.password);
+                            body.find("#employeePhone").val(obj.data.employeePhone);
+                            body.find("#employeeCompany").val(obj.data.employeeCompany);
+                            body.find("#employeeOpenid").val(openid);
+                            // layer.alert(JSON.stringify(obj.data));
+                            // for (var i = 0; i < inputList.length; i++ ) {
+                            //     $(inputList[i]).val(editList[i]); //遍历子窗口的input标签，将之前数组中的值一次放入显示
+                            // }
+                        },
+                        end: function(){
+                            layer.msg('操作成功！！！', {
+                                time: 20000, //20s后自动关闭
+                                btn: ['知道了']
+                            });
+                            location=window.location;//刷新
+                        }
+                    });
+                    break;
+                case 'del':
+                    layer.confirm('是否移除员工：' + obj.data.employeeUserId, function(index){
+                        $.ajax({
+                            url: '/lf/Employee/delById?id='+obj.data.id,
+                            type: "post",
+                            success: function(suc) {
+                                obj.del();
+                                layer.close(index);
+                                layer.msg("删除成功", {
+                                    icon: 1
+                                });
+                            }
+                        });
+                    });
+                    break;
+            }
+        });
+
+        // 监听工具条
+
+        // table.on('tool(employee)', function(obj){
+        //     var data = obj.data;
+        //     if(obj.event === 'detail'){
+        //         layer.msg('ID：'+ data.id + ' 的查看操作');
+        //     } else if(obj.event === 'del'){
+        //         layer.confirm('真的删除行么', function(index){
+        //             obj.del();
+        //             layer.close(index);
+        //         });
+        //     } else if(obj.event === 'edit'){
+        //         layer.alert('编辑行：<br>'+ JSON.stringify(data))
+        //     }
+        // });
+
+        //头操作按钮事件处理
+        $('.reload').on('click', function() {
+            var employeeUserId = $('#employeeUserId');
+            var employeeCompany = $('#employeeCompany');
+            if(employeeUserId.val() != "" && employeeCompany.val() !=""){
+                //执行重载
+                table.reload('allemployee', {
+                    url:'/lf/Employee/multiConditionSelect',
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    },
+                    where:{
+                        employeeUserId:employeeUserId.val(),
+                        employeeCompany:employeeCompany.val()
+
+                    }
+                },'data');
+            }
+            else{
+                //执行重载
+                table.reload('allemployee', {
+                    url:'/lf/Employee/selectAll',
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    },
+                    where:{
+                        employeeUserId:employeeUserId.val(),
+                        employeeCompany:employeeCompany.val()
+
+                    }
+                },'data');
+            }
+        });
+
+        // $('.reload').on('click', function(){
+        //     var type = $(this).data('type');
+        //     active[type] ? active[type].call(this) : '';
+        // });
+        //添加操作
+        $('.add').on('click', function(){
+            var index = layer.open({
+                type: 2,
+                title: "添加员工信息",
+                area: ['20%', '60%'],
+                fix: false,
+                maxmin: true,
+                shadeClose: true,
+                shade: 0.4,
+                // skin: 'layui-layer-rim',
+                content: 'employeeinfoADD.html?id=1',
+                success: function(layero, index){
+                },
+                end: function(){
+                    layer.msg('操作成功！！！', {
+                        time: 20000, //20s后自动关闭
+                        btn: ['知道了']
+                    });
+                    location=window.location;//刷新
+                }
+
+            });
+        });
+    });
+</script>
+<script>
+
+</script>
+
+<!--工作模板-->
+<!--<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>-->
+<script type="employeeInfo/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+</body>
+</html>

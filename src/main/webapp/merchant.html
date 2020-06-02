@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>商家列表</title>
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all">
+    <style type="text/css">
+        .csbutton{
+            width:100px;
+            height: 25px;
+            background-color: #ffffff;
+        }
+        .line{
+            color: #40f74f;
+            border: 1px solid #43f722;
+            border-radius: 4em;
+        }
+        .off-line{
+            color: #545454;
+            border: 1px solid #e1e2e0;
+            border-radius: 4em;
+        }
+        .shLevel0{
+            color: #0810a8;
+            border: 1px solid #0810a8;
+            border-radius: 4em;
+        }
+        .shLevel1{
+            color: #1f28f9;
+            border: 1px solid #1f28f9;
+            border-radius: 4em;
+        }
+        .shLevel2{
+            color: #5753f9;
+            border: 1px solid #5753f9;
+            border-radius: 4em;
+        }
+        .shLevel3{
+            color: #6c88f9;
+            border: 1px solid #6c88f9;
+            border-radius: 4em;
+        }
+    </style>
+</head>
+<body>
+<div class="demoTable" style="margin: 5px;line-height: 50px;">
+    <div class="layui-inline">
+        <input class="layui-input" id="shUserId" autocomplete="off" placeholder="商户名">
+    </div>
+    <div class="layui-inline">
+        <input class="layui-input" id="shRealName" autocomplete="off" placeholder="负责人 ">
+    </div>
+    <div class="layui-inline">
+        <input class="layui-input" id="shPhone" autocomplete="off" placeholder="电话">
+    </div>
+    <button class="layui-btn addMerchant"  lay-filter="" lay-event="addMerchant">添加商家</button>
+    <button class="layui-btn reset"  lay-filter="" lay-event="reset">页面重置</button>
+</div>
+<table id="idDevice" lay-filter="device"></table>
+<script src="plugins/layui/layui.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script>
+    layui.use('table', function () {
+        var table = layui.table, form = layui.form;
+        var $ = layui.jquery, layer = layui.layer;
+        var RshUserId = "雷风";
+        var index = layer.load(2);
+        //第一个实例
+        table.render({
+            id: 'allDevice'
+            , elem: '#idDevice'
+            , checkbox: true
+            ,loading: true //翻页加loading
+            // ,toolbar: '#toolbarDemo'
+            , url: '/lf/user/selall?shUserID='+RshUserId //数据接口
+            , height: $(document).height() - $('#idDevice').offset().top - 20
+            , page: true //开启分页
+            , limits: [10, 20, 30,50,100]
+            , limit: 20 //每页默认显示的数量
+            ,response:{//开启延迟加载栏
+                statusName: 'code',
+                msgName: 'msg' ,//状态信息的字段名称，默认：msg
+                countName: 'count', //数据总数的字段名称，默认：count
+                dataName: 'data' //数据列表的字段名称，默认：data
+            }
+            , cols: [[ //表头
+                {fixed: 'left', type: 'checkbox'}
+                , {field: 'shUserId', title: '商户名称', width: 130, fixed: 'left', sort: true}
+                , {field: 'shRealName', title: '负责人', width: 110, sort: true, align: 'center'}
+                , {field: 'shOpenid', title: '绑定微信', width: 120,templet: ShOpenid, align: 'center'}
+                , {field: 'shPhone', title: '联系电话', width: 150}
+                , {field: 'shLevel', title: '运营等级', width: 120, sort: true, templet: Online, align: 'center'}
+                , {field: 'shSuperiorDealer0', title: '总代理', width: 100, sort: true, align: 'center'}
+                , {field: 'shSuperiorDealer1', title: '一级代理', width: 120, sort: true}
+                , {field: 'shSuperiorDealer2', title: '二级代理', width: 120, }
+                , {field: 'shSuperiorDealer3', title: '三级代理', width: 120,}
+                , {field: 'shPaymentRatio', title: '所占比例', width: 120, align: 'center'}
+                , {field: 'shUserIdA', title: 'A分红', width: 120}
+                , {field: 'shPaymentRatioA', title: '分红比例', width: 120,align: 'center'}
+                , {field: 'shUserIdB', title: 'B分红', width: 120}
+                , {field: 'shPaymentRatioB', title: '分红比例', width: 120,align: 'center'}
+                , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 170, align: 'center'}
+            ]],
+            done: function (res) {
+                // pageCurr = curr;
+                layer.close(index);
+            }
+
+        });
+
+        function Online(data) {
+            var shLevel = data.shLevel;
+            var btns = "";
+            if (shLevel === 0) {
+                btns += '<button type="button" class="csbutton shLevel0" > 总代理 </button>';
+            }
+            else if (shLevel === 1) {
+                btns += '<button type="button" class="csbutton shLevel1">一级代理</button>';
+            }
+            else if (shLevel === 2) {
+                btns += '<button type="button" class="csbutton shLevel2">二级代理</button>';
+            }
+            else {
+                btns += '<button type="button" class="csbutton shLevel3">三级代理</button>';
+            }
+            return btns;
+        }
+        function ShOpenid(data) {
+            var shOpenid = data.shOpenid;
+            var btns = "";
+            if(shOpenid === '' || shOpenid === null || shOpenid === undefined){
+                btns += '<button type="button" class="csbutton off-line" > 未绑定 </button>';
+            }
+            else{
+                btns += '<button type="button" class="csbutton line" > 已绑定 </button>';
+            }
+            return btns;
+        }
+         //工具条
+        table.on('tool(device)', function (obj) {
+            switch (obj.event) {
+                case 'edit':
+                    var index = layer.open({
+                        type: 2,
+                        title: "编辑商家",
+                        area: ['20%', '30%'],
+                        fix: false,
+                        maxmin: true,
+                        shadeClose: true,
+                        shade: 0.4,
+                        content: 'merchantEdit.html?id=1',
+                        success: function (layero, index) {
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#shUserId").val(obj.data.shUserId);
+                            body.find("#shRealName").val(obj.data.shRealName);
+                            body.find("#shPhone").val(obj.data.shPhone);
+                        },
+                        end: function () {
+                            location = window.location;//刷新
+                            layer.msg('操作成功');
+                        }
+                    });
+                    break;
+                case 'del':
+                    var index = layer.open({
+                        type: 2,
+                        title: "设置分红",
+                        area: ['20%', '50%'],
+                        fix: false,
+                        maxmin: true,
+                        shadeClose: true,
+                        shade: 0.4,
+                        content: 'merchantDividend.html?id=1',
+                        success: function (layero, index) {
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#shUserId").val(obj.data.shUserId);
+                            body.find("#shPaymentRatio0").val(100-obj.data.shPaymentRatioA-obj.data.shPaymentRatioB);
+                            body.find("#shUserIdA").val(obj.data.shUserIdA);
+                            body.find("#shPaymentRatioA").val(obj.data.shPaymentRatioA);
+                            body.find("#shUserIdB").val(obj.data.shUserIdB);
+                            body.find("#shPaymentRatioB").val(obj.data.shPaymentRatioB);
+                        },
+                        end: function () {
+                            location = window.location;//刷新
+                            layer.msg('操作成功');
+                        }
+                    });
+                    break;
+            }
+        });
+
+
+        // 监听条件变化
+        var map = new Map();
+        $("#shUserId").bind('input porpertychange', function () {
+            $('#shPhone').val("");//失去焦点后将值清空
+            $('#shRealName').val("");
+            var shUserId = $('#shUserId').val();
+            map.set('shUserId', shUserId);
+            search(map);
+        });
+        $("#shRealName").bind('input porpertychange', function () {
+            $('#shUserId').val("");//失去焦点后将值清空
+            $('#shPhone').val("");
+            var shRealName = $('#shRealName').val();
+            map.set('shRealName', shRealName);
+            search(map);
+        });
+        $("#shPhone").bind('input porpertychange', function () {
+            $('#shUserId').val("");//失去焦点后将值清空
+            $('#shRealName').val("");
+            var shPhone = $('#shPhone').val();
+            map.set('shPhone', shPhone);
+            search(map);
+        });
+        //单条件搜索
+        function search(date) {
+            //查看传入的值是哪个条件  ;
+            var shUserId = null, shRealName = null, shPhone = null;
+            if (date.has("shUserId")) {
+                shUserId = date.get("shUserId");
+                date.delete("shUserId");
+            }
+
+            if (date.has("shRealName")) {
+                shRealName = date.get("shRealName");
+                date.delete("shRealName");
+            }
+
+            if (date.has("shPhone")) {
+                shPhone = date.get("shPhone");
+                date.delete("shPhone");
+            }
+            // alert(shUserId+" "+shRealName+" "+shPhone);
+            table.reload('allDevice', {
+                url: '/lf/user/search',
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                response:{//开启延迟加载栏
+                    statusName: 'code',
+                    msgName: 'msg' ,//状态信息的字段名称，默认：msg
+                    countName: 'count', //数据总数的字段名称，默认：count
+                    dataName: 'data' //数据列表的字段名称，默认：data
+                },
+                where: {
+                    shUserId: shUserId,
+                    shRealName: shRealName,
+                    shPhone: shPhone,
+                    RshUserId:RshUserId
+                }
+
+            }, 'data');
+        }
+
+        $('.addMerchant').on('click', function () {
+            var index = layer.open({
+                type: 2,
+                title: "添加商户",
+                area: ['20%', '50%'],
+                fix: false,
+                maxmin: true,
+                shadeClose: true,
+                shade: 0.4,
+                content: 'merchantADD.html?id=1',
+                success: function (layero, index) {
+                    var body = layer.getChildFrame('body', index);
+                    body.find("#shUserIdUp").val(RshUserId);
+                },
+                end: function () {
+                    layer.msg('操作成功');
+                    // location = window.location;//刷新
+                }
+            });
+        });
+        $('.reset').on('click', function () {
+            location = window.location;//
+        });
+    });
+</script>
+<script>
+
+</script>
+
+<!--工作模板-->
+<!--<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>-->
+<script type="employeeInfo/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="del">添加分红</a>
+
+
+
+
+</script>
+
+</body>
+</html>

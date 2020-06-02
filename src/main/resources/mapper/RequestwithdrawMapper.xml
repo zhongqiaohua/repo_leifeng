@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.leifeng.dao.RequestwithdrawMapper">
+  <resultMap id="BaseResultMap" type="com.example.leifeng.models.Requestwithdraw">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="trade_no" jdbcType="VARCHAR" property="tradeNo" />
+    <result column="sh_user_id" jdbcType="VARCHAR" property="shUserId" />
+    <result column="withdraw" jdbcType="INTEGER" property="withdraw" />
+    <result column="dateTime" jdbcType="VARCHAR" property="datetime" />
+    <result column="handling_fee" jdbcType="INTEGER" property="handlingFee" />
+    <result column="adminAgree" jdbcType="INTEGER" property="adminagree" />
+    <result column="agreeTime" jdbcType="VARCHAR" property="agreetime" />
+  </resultMap>
+  <!--<sql id="Base_Column_List">-->
+      <!--id, trade_no, sh_user_id,-->
+      <!--withdraw, dateTime, handling_fee,-->
+      <!--adminAgree, agreeTime-->
+  <!--</sql>-->
+  <!--<select id="selALL" resultMap="BaseResultMap">-->
+      <!--SELECT <include refid="Base_Column_List" /> FROM RequestWithdraw WHERE sh_user_id IN (SELECT sh_user_id FROM UserInfo WHERE-->
+    <!--sh_superior_dealer_0=#{param3} OR sh_superior_dealer_1=#{param3} OR sh_superior_dealer_2=#{param3} OR-->
+    <!--sh_superior_dealer_3=#{param3} OR sh_user_id=#{param3})-->
+    <!--ORDER BY agreeTime DESC-->
+    <!--offset #{param2}* #{param1} rows fetch next #{param2} rows only-->
+  <!--</select>-->
+  <!--<select id="countRequestWithdraw" resultType="java.lang.Integer">-->
+    <!--SELECT COUNT (*) FROM RequestWithdraw WHERE sh_user_id IN (SELECT sh_user_id FROM UserInfo WHERE-->
+    <!--sh_superior_dealer_0=#{param3} OR sh_superior_dealer_1=#{param3} OR sh_superior_dealer_2=#{param3} OR-->
+    <!--sh_superior_dealer_3=#{param3} OR sh_user_id=#{param3})-->
+  <!--</select>-->
+  <insert id="insert" parameterType="com.example.leifeng.models.Requestwithdraw">
+    insert into RequestWithdraw (id, trade_no, sh_user_id,
+      withdraw, dateTime, handling_fee,
+      adminAgree, agreeTime)
+    values (#{id,jdbcType=INTEGER}, #{tradeNo,jdbcType=VARCHAR}, #{shUserId,jdbcType=VARCHAR},
+      #{withdraw,jdbcType=INTEGER}, #{datetime,jdbcType=VARCHAR}, #{handlingFee,jdbcType=INTEGER},
+      #{adminagree,jdbcType=INTEGER}, #{agreetime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.leifeng.models.Requestwithdraw">
+    insert into RequestWithdraw
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="tradeNo != null">
+        trade_no,
+      </if>
+      <if test="shUserId != null">
+        sh_user_id,
+      </if>
+      <if test="withdraw != null">
+        withdraw,
+      </if>
+      <if test="datetime != null">
+        dateTime,
+      </if>
+      <if test="handlingFee != null">
+        handling_fee,
+      </if>
+      <if test="adminagree != null">
+        adminAgree,
+      </if>
+      <if test="agreetime != null">
+        agreeTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="tradeNo != null">
+        #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="shUserId != null">
+        #{shUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="withdraw != null">
+        #{withdraw,jdbcType=INTEGER},
+      </if>
+      <if test="datetime != null">
+        #{datetime,jdbcType=VARCHAR},
+      </if>
+      <if test="handlingFee != null">
+        #{handlingFee,jdbcType=INTEGER},
+      </if>
+      <if test="adminagree != null">
+        #{adminagree,jdbcType=INTEGER},
+      </if>
+      <if test="agreetime != null">
+        #{agreetime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

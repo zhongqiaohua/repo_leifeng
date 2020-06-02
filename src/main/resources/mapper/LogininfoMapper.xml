@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.leifeng.dao.LogininfoMapper">
+  <resultMap id="BaseResultMap" type="com.example.leifeng.models.Logininfo">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="openid" jdbcType="VARCHAR" property="openid" />
+    <result column="sh_user_id" jdbcType="VARCHAR" property="shUserId" />
+    <result column="user_level" jdbcType="INTEGER" property="userLevel" />
+    <result column="shuserid_list" jdbcType="VARCHAR" property="shuseridList" />
+  </resultMap>
+  <insert id="insert" parameterType="com.example.leifeng.models.Logininfo">
+    insert into LoginInfo (id, openid, sh_user_id,
+      user_level, shuserid_list)
+    values (#{id,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{shUserId,jdbcType=VARCHAR},
+      #{userLevel,jdbcType=INTEGER}, #{shuseridList,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.leifeng.models.Logininfo">
+    insert into LoginInfo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="openid != null">
+        openid,
+      </if>
+      <if test="shUserId != null">
+        sh_user_id,
+      </if>
+      <if test="userLevel != null">
+        user_level,
+      </if>
+      <if test="shuseridList != null">
+        shuserid_list,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="openid != null">
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="shUserId != null">
+        #{shUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="userLevel != null">
+        #{userLevel,jdbcType=INTEGER},
+      </if>
+      <if test="shuseridList != null">
+        #{shuseridList,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

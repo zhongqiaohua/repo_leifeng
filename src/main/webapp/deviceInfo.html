@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>设备管理</title>
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all">
+    <style type="text/css">
+        .csbutton{
+            width:100px;
+            height: 25px;
+            background-color: #ffffff;
+        }
+        .line{
+            color: #43f722;
+            border: 1px solid #43f722;
+            border-radius: 4em;
+        }
+        .off-line{
+            color: #545454;
+            border: 1px solid #e1e2e0;
+            border-radius: 4em;
+        }
+        .ACcharge{
+            color: #272ba8;
+            border: 1px solid #292be2;
+            border-radius: 4em;
+        }
+        .DCcharge{
+            color: #f9ec27;
+            border: 1px solid #ffeb3b;
+            border-radius: 4em;
+        }
+    </style>
+</head>
+<body>
+<div class="demoTable" style="margin: 5px;line-height: 50px;">
+    <div class="layui-inline">
+        <input class="layui-input" id="deviceid" autocomplete="off" placeholder="设备编号">
+    </div>
+    <div class="layui-inline">
+        <input class="layui-input" id="controlId" autocomplete="off" placeholder="4G模块编号 ">
+    </div>
+    <div class="layui-inline">
+        <input class="layui-input" id="deviceDetailAddress" autocomplete="off" placeholder="详细地址">
+    </div>
+    <div class="layui-inline">
+        <input class="layui-input" id="userId" autocomplete="off" placeholder="当前充电用户">
+    </div>
+    <text style="color: #aaaaaa"> ——输入内容就可以搜索</text>
+    <div>
+        <form class="layui-form" action="" name="devFrom">
+            <div class="layui-inline">
+                <select name="shUserId"  id="shUserId" class="shUserId" lay-filter="noshUserId" lay-search="">
+                    <option value="">商户</option>
+                </select>
+            </div>
+            - -
+            <div class="layui-inline">
+                <select name="network"  lay-search="" id="network">
+                </select>
+            </div>
+            - -
+            <div class="layui-inline">
+                <select name="interest" lay-filter="aihao" id="online">
+                    <option value="" selected="">在线状态</option>
+                    <option value="0">在线</option>
+                    <option value="2">离线</option>
+                </select>
+            </div>
+            - -
+            <div class="layui-inline">
+                <select name="interest" lay-filter="aihao" id="chargetype">
+                    <option value="" selected="">充电状态</option>
+                    <option value="0">空闲</option>
+                    <option value="1">交流充电</option>
+                    <option value="2">直流充电</option>
+                    <option value="3">充电中</option>
+                </select>
+            </div>
+            <button class="layui-btn conditions" lay-submit="" lay-filter="" lay-even="conditions">综合搜索</button>
+            <button class="layui-btn multi" data-type="multi">批量操作</button>
+            <button class="layui-btn reset" lay-submit="" lay-filter="" lay-event="reset">重置</button>
+            <text style="color: #aaaaaa"> ——综合搜索可一个条件搜索也可以多个条件搜索</text>
+        </form>
+    </div>
+</div>
+<table id="idDevice" lay-filter="device"></table>
+<script src="plugins/layui/layui.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script>
+    layui.use('table', function () {
+        var table = layui.table, form = layui.form;
+        var $ = layui.jquery, layer = layui.layer;
+        var RshUserId = "雷风";
+        var index = layer.load(2);
+        //第一个实例
+        table.render({
+            id: 'allDevice'
+            , elem: '#idDevice'
+            , checkbox: true
+            ,loading: true //翻页加loading
+            // ,toolbar: '#toolbarDemo'
+            , url: '/lf/Deviceinfo/selectAll?shUserID='+RshUserId //数据接口
+            , height: $(document).height() - $('#idDevice').offset().top - 20
+            , page: true //开启分页
+            , limits: [10, 20, 30,50,100]
+            , limit: 20 //每页默认显示的数量
+            ,response:{//开启延迟加载栏
+                statusName: 'code',
+                msgName: 'msg' ,//状态信息的字段名称，默认：msg
+                countName: 'count', //数据总数的字段名称，默认：count
+                dataName: 'data' //数据列表的字段名称，默认：data
+            }
+            , cols: [[ //表头
+                {fixed: 'left', type: 'checkbox'}
+                , {field: 'deviceid', title: '设备编号', width: 130, fixed: 'left', sort: true}
+                , {field: 'placeid', title: '安装编号', width: 110, sort: true, align: 'center'}
+                , {field: 'shUserId', title: '所属商户', width: 150}
+                , {field: 'network', title: '所属网点', width: 150}
+                , {field: 'online', title: '在线状态', width: 120, sort: true, templet: Online, align: 'center'}
+                , {field: 'chargetype', title: '充电状态', width: 120, sort: true, templet: ChargeType, align: 'center'}
+                , {field: 'controlId', title: '4G模块编号', width: 150, sort: true}
+                , {field: 'version', title: '当前版本', width: 120, align: 'center'}
+                , {field: 'deviceProvinceAddress', title: '省', width: 80, align: 'center'}
+                , {field: 'deviceCityAddress', title: '市', width: 80, align: 'center'}
+                , {field: 'deviceAreaAddress', title: '区', width: 80, align: 'center'}
+                , {field: 'deviceDetailAddress', title: '详细地址', width: 150}
+                , {field: 'updatestatetime', title: '更新时间', width: 180}
+                , {field: 'userid', title: '充电用户', width: 180}
+                , {field: 'chargepower', title: '充电功率（W）', width: 130}
+                , {field: 'chargepresettime', title: '预充电时间(分钟)', width: 140}
+                , {field: 'chargeremainingtime', title: '剩余时间(分钟)', width: 130}
+                , {field: 'havepaymoney', title: '支付金额(元)',templet: havepayMoney, width: 120}
+                , {field: 'scaleoffees', title: '收费标准(分钟/元)', width: 150}
+                , {field: 'havechargetime', title: '已充电时间(分钟)', width: 150}
+                , {field: 'usedmoney', title: '已消耗金额(元)',templet:usedMoney, width: 150}
+                , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 170, align: 'center'}
+            ]],
+            done: function (res) {
+                // pageCurr = curr;
+                layer.close(index);
+                //如果是异步请求数据方式，res即为你接口返回的信息。
+                //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                //console.log(res);
+                //得到当前页码
+                //console.log(curr);
+                //得到数据总量
+                //console.log(count);
+                // $(".layui-table-box").find("[data-field='id']").css("display","none");
+            }
+
+        });
+        function havepayMoney(data) {
+            var havepaymoney = data.havepaymoney;
+            return havepaymoney/100.0;
+        }
+        function usedMoney(data) {
+            var usedmoney = data.usedmoney;
+            return usedmoney/100.0;
+        }
+        // 商户
+        $.get("/lf/Deviceinfo/linkageShUserId?shUserId="+RshUserId, function (data) {
+            var opt = "";
+            for (var i = 0; i < data.length; i++) {
+                var option = "<option value='" + data[i] + "'>" + data[i] + "</option>";
+                $("select[name=shUserId]").append(option);
+            }
+            layui.form.render('select', 'devFrom');
+            form.render('select');
+            return false;
+        });
+
+        // 网点
+        $.get("/lf/Deviceinfo/linkageNetwork?shUserId="+RshUserId, function (data) {
+            var opt = "<option value=\"\">网点</option>";
+            $("select[name=network]").append(opt);
+            for (var i = 0; i < data.length; i++) {
+                var option = "<option value='" + data[i] + "'>" + data[i] + "</option>";
+                $("select[name=network]").append(option);
+            }
+            layui.form.render('select', 'devFrom');
+            form.render('select');
+            return false;
+        });
+
+        function Online(data) {
+            var online = data.online;
+            var btns = "";
+            if (online === 1) {
+                btns += '<button type="button" class="csbutton line" > 在线 </button>';
+            }
+            else if (online === 0) {
+                btns += '<button type="button" class="csbutton line">在线</button>';
+            }
+            else {
+                btns += '<button type="button" class="csbutton off-line">离线</button>';
+            }
+            return btns;
+        }
+
+        function ChargeType(data) {
+            var chargetype = data.chargetype;
+            var btns = "";
+            if (chargetype === 1) {
+                btns += '<button type="button" class="csbutton ACcharge" > 交流充电 </button>';
+            }
+            else if (chargetype === 2) {
+                btns += '<button type="button" class="csbutton DCcharge" > 直流充电 </button>';
+            }
+            else {
+                btns += '<button type="button" class="csbutton line" > 空闲 </button>';
+            }
+            return btns;
+        }
+
+        // case 'multi':
+        //     var checkStatus = table.checkStatus(obj.config.id);
+        //     var data = checkStatus.data;
+        //     layer.alert(JSON.stringify(data));
+        //     var data = checkStatus.data;
+        //     layer.msg('选中了：'+ data.length + ' 个');
+        //     return false;
+        //     break;
+
+         //工具条
+        table.on('tool(device)', function (obj) {
+            switch (obj.event) {
+                case 'edit':
+                    var index = layer.open({
+                        type: 2,
+                        title: "编辑设备信息",
+                        area: ['20%', '30%'],
+                        fix: false,
+                        maxmin: true,
+                        shadeClose: true,
+                        shade: 0.4,
+                        content: 'deviceinfoEdit.html?id=1',
+                        success: function (layero, index) {
+                            var body = layer.getChildFrame('body', index);
+                            body.find("#deviceId").val(obj.data.deviceid);
+                            body.find("#shUserId").val(obj.data.shUserId);
+                            body.find("#network").val(obj.data.network);
+                        },
+                        end: function () {
+                            layer.msg('操作成功');
+                            // location = window.location;//刷新
+                        }
+                    });
+                    break;
+                case 'del':
+                    layer.confirm('是否解绑设备：' + obj.data.deviceid, function (index) {
+                        $.ajax({
+                            url: '/lf/Deviceinfo/unbindByDeviceid?deviceid=' + obj.data.deviceid,
+                            type: "post",
+                            success: function (suc) {
+                                obj.del();
+                                layer.close(index);
+                                layer.msg("解绑成功");
+                            }
+                        });
+                    });
+                    break;
+            }
+        });
+
+
+        // 监听条件变化
+        var map = new Map();
+        $("#deviceid").bind('input porpertychange', function () {
+            $('#controlId').val("");
+            $('#deviceDetailAddress').val("");
+            $('#userId').val("");
+            var deviceId = $('#deviceid').val();
+            map.set('deviceId', deviceId);
+            search(map);
+        });
+        $("#controlId").bind('input porpertychange', function () {
+            $('#deviceid').val("");
+            $('#deviceDetailAddress').val("");
+            $('#userId').val("");
+            var controlId = $('#controlId').val();
+            map.set('controlId', controlId);
+            search(map);
+        });
+        $("#deviceDetailAddress").bind('input porpertychange', function () {
+            $('#deviceid').val("");
+            $('#controlId').val("");
+            $('#userId').val("");
+            var deviceDetailAddress = $('#deviceDetailAddress').val();
+            map.set('deviceDetailAddress', deviceDetailAddress);
+            search(map);
+        });
+        $("#userId").bind('input porpertychange', function () {
+            $('#deviceid').val("");
+            $('#controlId').val("");
+            $('#deviceDetailAddress').val("");
+            var userId = $('#userId').val();
+            map.set('userId', userId);
+            search(map);
+        });
+        //商户值发生变化事件
+        form.on('select(noshUserId)', function(data){
+            var shUserId = null;
+            if($("#shUserId").val()===""){
+                shUserId =RshUserId;
+            }
+            else{
+                shUserId =$("#shUserId").val();
+            }
+
+            $("#network").empty();
+            $.ajax({
+                url: "/lf/Deviceinfo/linkageNetwork?shUserId="+shUserId,//带参数将这个传到后台条件查询方法里面
+                type: "post",
+                dataType : "json",
+                contentType : "application/json",
+                async: false,//同步
+                success: function (result) {
+                    if(result.length==0){
+                        var opt = "<option value=\"\">该商户无网点</option>";
+                        $("select[name=network]").append(opt);
+                    }
+                    else{
+                        var opt = "<option value=\"\">网点</option>";
+                        $("select[name=network]").append(opt);
+                        for (var i = 0; i < result.length; i++) {
+                            var option = "<option value='" + result[i] + "'>" + result[i] + "</option>";
+                            $("select[name=network]").append(option);
+                        }
+                    }
+                    layui.form.render('select', 'devFrom');
+                }
+            });
+            form.render('select');//最后记得渲染
+        });
+
+        //批量解绑或更改网点
+        $('.multi').on('click', function () {
+            var arr=[];
+            //获取选中数据
+            var checkStatus = table.checkStatus('allDevice')
+                ,data = checkStatus.data;
+            if(data.length===0)
+            {
+                layer.msg('请选择设备');
+            }
+            else {
+                data.forEach(function(item){
+                    arr.push(item.deviceid);
+                })
+                var index = layer.open({
+                    type: 2,
+                    title: "批量设备操作",
+                    area: ['20%', '40%'],
+                    fix: false,
+                    maxmin: true,
+                    shadeClose: true,
+                    shade: 0.4,
+                    content: 'deviceinfoMultiEdit.html?id=1',
+                    success: function (layero, index) {
+                        var body = layer.getChildFrame('body', index);
+                        body.find("#deviceIds").val(JSON.stringify(arr));
+                    },
+                    end: function () {
+                        layer.msg('操作成功');
+                        location = window.location;//刷新
+                    }
+                });
+            }
+            return false;
+        });
+            // 多条件搜索
+        $('.conditions').on('click', function () {
+            var shUserId = $('#shUserId').val();
+            var network = $('#network').val();
+            var online = $('#online').val();
+            var chargetype = $('#chargetype').val();
+            //正上方
+            if (shUserId === '' && network === '' && online === '' && chargetype === '') {
+                layer.msg('请输入搜索条件', {
+                    offset: 't',
+                    anim: 6
+                });
+                return false;
+            }
+            table.reload('allDevice', {
+                url: '/lf/Deviceinfo/multiconditionalSearch',
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                response:{//开启延迟加载栏
+                statusName: 'code',
+                    msgName: 'msg' ,//状态信息的字段名称，默认：msg
+                    countName: 'count', //数据总数的字段名称，默认：count
+                    dataName: 'data' //数据列表的字段名称，默认：data
+                },
+                where: {
+                    shUserId: shUserId,
+                    network: network,
+                    online: online,
+                    chargetype: chargetype,
+                    RshUserId:RshUserId,
+                }
+            }, 'data');
+            // layer.close(index);
+            return false;
+        });
+
+        //单条件搜索
+        function search(date) {
+            //查看传入的值是哪个条件  ;
+            var deviceId = null, controlId = null, deviceDetailAddress = null, userId = null;
+            if (date.has("deviceId")) {
+                deviceId = date.get("deviceId");
+                date.delete("deviceId");
+            }
+
+            if (date.has("controlId")) {
+                controlId = date.get("controlId");
+                date.delete("controlId");
+            }
+
+            if (date.has("deviceDetailAddress")) {
+                deviceDetailAddress = date.get("deviceDetailAddress");
+                date.delete("deviceDetailAddress");
+            }
+
+            if (date.has("userId")) {
+                userId = date.get("userId");
+                date.delete("userId");
+            }
+            table.reload('allDevice', {
+                url: '/lf/Deviceinfo/search',
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                response:{//开启延迟加载栏
+                    statusName: 'code',
+                    msgName: 'msg' ,//状态信息的字段名称，默认：msg
+                    countName: 'count', //数据总数的字段名称，默认：count
+                    dataName: 'data' //数据列表的字段名称，默认：data
+                },
+                where: {
+                    deviceId: deviceId,
+                    controlId: controlId,
+                    deviceDetailAddress: deviceDetailAddress,
+                    userId: userId,
+                    RshUserId:RshUserId,
+                }
+
+            }, 'data');
+        }
+
+        $('.reset').on('click', function () {
+            location = window.location;//
+        });
+    });
+</script>
+<script>
+
+</script>
+
+<!--工作模板-->
+<!--<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>-->
+<script type="employeeInfo/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">解绑</a>
+
+
+
+
+</script>
+
+</body>
+</html>

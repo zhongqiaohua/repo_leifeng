@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.leifeng.dao.IncomeMapper">
+    <resultMap id="BaseResultMap" type="com.example.leifeng.models.Income">
+        <result column="id" jdbcType="INTEGER" property="id"/>
+        <result column="sh_user_id" jdbcType="VARCHAR" property="shUserId"/>
+        <result column="isTransfer" jdbcType="VARCHAR" property="istransfer"/>
+        <result column="all_income" jdbcType="DECIMAL" property="allIncome"/>
+        <result column="this_month_income" jdbcType="DECIMAL" property="thisMonthIncome"/>
+        <result column="last_month_income" jdbcType="DECIMAL" property="lastMonthIncome"/>
+        <result column="today_income" jdbcType="DECIMAL" property="todayIncome"/>
+        <result column="rate" jdbcType="INTEGER" property="rate"/>
+        <result column="transfer" jdbcType="DECIMAL" property="transfer"/>
+        <result column="withdrawable" jdbcType="DECIMAL" property="withdrawable"/>
+        <result column="handling_fee" jdbcType="DECIMAL" property="handlingFee"/>
+        <result column="request_withdraw" jdbcType="INTEGER" property="requestWithdraw"/>
+        <result column="request_withdraw_time" jdbcType="VARCHAR" property="requestWithdrawTime"/>
+        <result column="updateincometime" jdbcType="TIMESTAMP" property="updateincometime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+      id,sh_user_id,isTransfer,all_income,this_month_income,last_month_income,today_income
+      ,rate,transfer,withdrawable,handling_fee,request_withdraw,request_withdraw_time
+      ,updateincometime,updateincomeMonth
+  </sql>
+    <select id="search" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM Income WHERE sh_user_id = #{param3}
+        ORDER BY all_income DESC
+        offset #{param2}* #{param1} rows fetch next #{param2} rows only
+    </select>
+    <select id="countSearch" resultType="java.lang.Integer">
+        SELECT COUNT (*) FROM Income WHERE sh_user_id = #{param1}
+    </select>
+    <select id="selAllByShUserId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM Income WHERE sh_user_id IN (SELECT sh_user_id FROM UserInfo WHERE
+        sh_superior_dealer_0=#{param3} OR sh_superior_dealer_1=#{param3} OR sh_superior_dealer_2=#{param3} OR
+        sh_superior_dealer_3=#{param3} OR sh_user_id=#{param3})
+        ORDER BY all_income DESC offset #{param2}* #{param1} rows fetch next #{param2} rows only
+    </select>
+    <select id="countIncome" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM Income WHERE sh_user_id IN (SELECT sh_user_id FROM UserInfo WHERE
+      sh_superior_dealer_0=#{param1} OR sh_superior_dealer_1=#{param1} OR sh_superior_dealer_2=#{param1} OR
+        sh_superior_dealer_3=#{param1} OR sh_user_id=#{param1})
+  </select>
+</mapper>

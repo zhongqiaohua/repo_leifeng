@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.leifeng.dao.UserinfoMapper">
+    <resultMap id="BaseResultMap" type="com.example.leifeng.models.Userinfo">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="sh_user_id" jdbcType="VARCHAR" property="shUserId"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="sh_real_name" jdbcType="VARCHAR" property="shRealName"/>
+        <result column="sh_openid" jdbcType="VARCHAR" property="shOpenid"/>
+        <result column="income" jdbcType="INTEGER" property="income"/>
+        <result column="balance" jdbcType="INTEGER" property="balance"/>
+        <result column="rate" jdbcType="INTEGER" property="rate"/>
+        <result column="transfer" jdbcType="INTEGER" property="transfer"/>
+        <result column="handling_fee" jdbcType="INTEGER" property="handlingFee"/>
+        <result column="sh_company_name" jdbcType="VARCHAR" property="shCompanyName"/>
+        <result column="sh_phone" jdbcType="VARCHAR" property="shPhone"/>
+        <result column="sh_level" jdbcType="INTEGER" property="shLevel"/>
+        <result column="sh_superior_dealer_0" jdbcType="VARCHAR" property="shSuperiorDealer0"/>
+        <result column="sh_superior_dealer_1" jdbcType="VARCHAR" property="shSuperiorDealer1"/>
+        <result column="sh_superior_dealer_2" jdbcType="VARCHAR" property="shSuperiorDealer2"/>
+        <result column="sh_superior_dealer_3" jdbcType="VARCHAR" property="shSuperiorDealer3"/>
+        <result column="sh_payment_ratio" jdbcType="INTEGER" property="shPaymentRatio"/>
+        <result column="sh_user_id_a" jdbcType="VARCHAR" property="shUserIdA"/>
+        <result column="sh_payment_ratio_a" jdbcType="INTEGER" property="shPaymentRatioA"/>
+        <result column="sh_user_id_b" jdbcType="VARCHAR" property="shUserIdB"/>
+        <result column="sh_payment_ratio_b" jdbcType="INTEGER" property="shPaymentRatioB"/>
+        <result column="openid_state" jdbcType="INTEGER" property="openidState"/>
+        <result column="withdraw_sms" jdbcType="VARCHAR" property="withdrawSms"/>
+        <result column="withdraw_sms_time" jdbcType="VARCHAR" property="withdrawSmsTime"/>
+        <result column="password_sms" jdbcType="VARCHAR" property="passwordSms"/>
+        <result column="password_sms_time" jdbcType="VARCHAR" property="passwordSmsTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, sh_user_id, password, sh_real_name, sh_openid, income, balance, rate, transfer,
+    handling_fee, sh_company_name, sh_phone, sh_level, sh_superior_dealer_0, sh_superior_dealer_1,
+    sh_superior_dealer_2, sh_superior_dealer_3, sh_payment_ratio, sh_user_id_a, sh_payment_ratio_a,
+    sh_user_id_b, sh_payment_ratio_b, openid_state, withdraw_sms, withdraw_sms_time,
+    password_sms, password_sms_time
+  </sql>
+    <select id="examineUser" resultType="java.lang.Integer">
+        SELECT COUNT (*) FROM UserInfo WHERE sh_user_id = #{param1}
+    </select>
+    <!--查询所有-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM UserInfo WHERE
+        sh_superior_dealer_0=#{param3} OR sh_superior_dealer_1=#{param3} OR sh_superior_dealer_2=#{param3} OR
+        sh_superior_dealer_3=#{param3} OR sh_user_id=#{param3}
+        ORDER BY sh_user_id offset #{param2}* #{param1} rows fetch next #{param2} rows only
+    </select>
+    <!--统计对应商家总数-->
+    <select id="countAll" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM UserInfo WHERE
+    sh_superior_dealer_0=#{param1} OR sh_superior_dealer_1=#{param1} OR sh_superior_dealer_2=#{param1} OR sh_superior_dealer_3=#{param1} OR sh_user_id=#{param1}
+  </select>
+    <!--选择条件查询-->
+    <select id="search" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM UserInfo WHERE 1=1
+        <if test="param3 != null">
+            AND sh_user_id like CONCAT('%',#{param3},'%')
+        </if>
+        <if test="param4 != null">
+            AND sh_real_name like CONCAT('%',#{param4},'%')
+        </if>
+        <if test="param5 != null">
+            AND sh_phone like CONCAT('%',#{param5},'%')
+        </if>
+        AND (sh_superior_dealer_0=#{param6} OR sh_superior_dealer_1=#{param6} OR sh_superior_dealer_2=#{param6} OR
+        sh_superior_dealer_3=#{param6} OR sh_user_id=#{param6})
+        ORDER BY sh_user_id offset #{param2}* #{param1} rows fetch next #{param2} rows only
+    </select>
+    <!--选择条件查询统计-->
+    <select id="countSearch" resultType="java.lang.Integer">
+        SELECT
+        COUNT (*)
+        FROM UserInfo WHERE 1=1
+        <if test="param1 != null">
+            AND sh_user_id like CONCAT('%',#{param1},'%')
+        </if>
+        <if test="param2!= null">
+            AND sh_real_name like CONCAT('%',#{param2},'%')
+        </if>
+        <if test="param3 != null">
+            AND sh_phone like CONCAT('%',#{param3},'%')
+        </if>
+        AND (sh_superior_dealer_0=#{param4} OR sh_superior_dealer_1=#{param4} OR sh_superior_dealer_2=#{param4} OR
+        sh_superior_dealer_3=#{param4} OR sh_user_id=#{param4})
+    </select>
+    <update id="updateMerchant">
+        UPDATE UserInfo SET sh_real_name = #{param2},sh_phone =  #{param3} WHERE sh_user_id =  #{param1}
+    </update>
+    <update id="updateDividend">
+        UPDATE UserInfo SET
+            sh_user_id_a= #{param2},sh_payment_ratio_a= #{param3},sh_user_id_b= #{param4},sh_payment_ratio_b= #{param5}
+        WHERE sh_user_id = #{param1}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from UserInfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.example.leifeng.models.Userinfo">
+    insert into UserInfo (sh_user_id, password,sh_real_name,rate, sh_company_name, sh_phone
+    ,sh_level, sh_superior_dealer_0, sh_superior_dealer_1,sh_superior_dealer_2, sh_superior_dealer_3, sh_payment_ratio)
+    values (#{shUserId,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR}
+      ,#{shRealName,jdbcType=VARCHAR},#{rate,jdbcType=INTEGER}
+      ,#{shCompanyName,jdbcType=VARCHAR},#{shPhone,jdbcType=VARCHAR}
+      ,#{shLevel,jdbcType=INTEGER},#{shSuperiorDealer0,jdbcType=VARCHAR}
+      ,#{shSuperiorDealer1,jdbcType=VARCHAR},#{shSuperiorDealer2,jdbcType=VARCHAR}
+      ,#{shSuperiorDealer3,jdbcType=VARCHAR},#{shPaymentRatio,jdbcType=INTEGER}
+      )
+  </insert>
+    <select id="getShSuperiorDealerALL"  resultType="map">
+        SELECT sh_level,sh_superior_dealer_0,sh_superior_dealer_1,sh_superior_dealer_2, sh_superior_dealer_3 FROM UserInfo WHERE sh_user_id = #{param1}
+    </select>
+
+
+    <insert id="insertSelective" parameterType="com.example.leifeng.models.Userinfo">
+        insert into UserInfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="shUserId != null">
+                sh_user_id,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="shRealName != null">
+                sh_real_name,
+            </if>
+            <if test="shOpenid != null">
+                sh_openid,
+            </if>
+            <if test="income != null">
+                income,
+            </if>
+            <if test="balance != null">
+                balance,
+            </if>
+            <if test="rate != null">
+                rate,
+            </if>
+            <if test="transfer != null">
+                transfer,
+            </if>
+            <if test="handlingFee != null">
+                handling_fee,
+            </if>
+            <if test="shCompanyName != null">
+                sh_company_name,
+            </if>
+            <if test="shPhone != null">
+                sh_phone,
+            </if>
+            <if test="shLevel != null">
+                sh_level,
+            </if>
+            <if test="shSuperiorDealer0 != null">
+                sh_superior_dealer_0,
+            </if>
+            <if test="shSuperiorDealer1 != null">
+                sh_superior_dealer_1,
+            </if>
+            <if test="shSuperiorDealer2 != null">
+                sh_superior_dealer_2,
+            </if>
+            <if test="shSuperiorDealer3 != null">
+                sh_superior_dealer_3,
+            </if>
+            <if test="shPaymentRatio != null">
+                sh_payment_ratio,
+            </if>
+            <if test="shUserIdA != null">
+                sh_user_id_a,
+            </if>
+            <if test="shPaymentRatioA != null">
+                sh_payment_ratio_a,
+            </if>
+            <if test="shUserIdB != null">
+                sh_user_id_b,
+            </if>
+            <if test="shPaymentRatioB != null">
+                sh_payment_ratio_b,
+            </if>
+            <if test="openidState != null">
+                openid_state,
+            </if>
+            <if test="withdrawSms != null">
+                withdraw_sms,
+            </if>
+            <if test="withdrawSmsTime != null">
+                withdraw_sms_time,
+            </if>
+            <if test="passwordSms != null">
+                password_sms,
+            </if>
+            <if test="passwordSmsTime != null">
+                password_sms_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="shUserId != null">
+                #{shUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="shRealName != null">
+                #{shRealName,jdbcType=VARCHAR},
+            </if>
+            <if test="shOpenid != null">
+                #{shOpenid,jdbcType=VARCHAR},
+            </if>
+            <if test="income != null">
+                #{income,jdbcType=INTEGER},
+            </if>
+            <if test="balance != null">
+                #{balance,jdbcType=INTEGER},
+            </if>
+            <if test="rate != null">
+                #{rate,jdbcType=INTEGER},
+            </if>
+            <if test="transfer != null">
+                #{transfer,jdbcType=INTEGER},
+            </if>
+            <if test="handlingFee != null">
+                #{handlingFee,jdbcType=INTEGER},
+            </if>
+            <if test="shCompanyName != null">
+                #{shCompanyName,jdbcType=VARCHAR},
+            </if>
+            <if test="shPhone != null">
+                #{shPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="shLevel != null">
+                #{shLevel,jdbcType=INTEGER},
+            </if>
+            <if test="shSuperiorDealer0 != null">
+                #{shSuperiorDealer0,jdbcType=VARCHAR},
+            </if>
+            <if test="shSuperiorDealer1 != null">
+                #{shSuperiorDealer1,jdbcType=VARCHAR},
+            </if>
+            <if test="shSuperiorDealer2 != null">
+                #{shSuperiorDealer2,jdbcType=VARCHAR},
+            </if>
+            <if test="shSuperiorDealer3 != null">
+                #{shSuperiorDealer3,jdbcType=VARCHAR},
+            </if>
+            <if test="shPaymentRatio != null">
+                #{shPaymentRatio,jdbcType=INTEGER},
+            </if>
+            <if test="shUserIdA != null">
+                #{shUserIdA,jdbcType=VARCHAR},
+            </if>
+            <if test="shPaymentRatioA != null">
+                #{shPaymentRatioA,jdbcType=INTEGER},
+            </if>
+            <if test="shUserIdB != null">
+                #{shUserIdB,jdbcType=VARCHAR},
+            </if>
+            <if test="shPaymentRatioB != null">
+                #{shPaymentRatioB,jdbcType=INTEGER},
+            </if>
+            <if test="openidState != null">
+                #{openidState,jdbcType=INTEGER},
+            </if>
+            <if test="withdrawSms != null">
+                #{withdrawSms,jdbcType=VARCHAR},
+            </if>
+            <if test="withdrawSmsTime != null">
+                #{withdrawSmsTime,jdbcType=VARCHAR},
+            </if>
+            <if test="passwordSms != null">
+                #{passwordSms,jdbcType=VARCHAR},
+            </if>
+            <if test="passwordSmsTime != null">
+                #{passwordSmsTime,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.leifeng.models.Userinfo">
+        update UserInfo
+        <set>
+            <if test="shUserId != null">
+                sh_user_id = #{shUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="shRealName != null">
+                sh_real_name = #{shRealName,jdbcType=VARCHAR},
+            </if>
+            <if test="shOpenid != null">
+                sh_openid = #{shOpenid,jdbcType=VARCHAR},
+            </if>
+            <if test="income != null">
+                income = #{income,jdbcType=INTEGER},
+            </if>
+            <if test="balance != null">
+                balance = #{balance,jdbcType=INTEGER},
+            </if>
+            <if test="rate != null">
+                rate = #{rate,jdbcType=INTEGER},
+            </if>
+            <if test="transfer != null">
+                transfer = #{transfer,jdbcType=INTEGER},
+            </if>
+            <if test="handlingFee != null">
+                handling_fee = #{handlingFee,jdbcType=INTEGER},
+            </if>
+            <if test="shCompanyName != null">
+                sh_company_name = #{shCompanyName,jdbcType=VARCHAR},
+            </if>
+            <if test="shPhone != null">
+                sh_phone = #{shPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="shLevel != null">
+                sh_level = #{shLevel,jdbcType=INTEGER},
+            </if>
+            <if test="shSuperiorDealer0 != null">
+                sh_superior_dealer_0 = #{shSuperiorDealer0,jdbcType=VARCHAR},
+            </if>
+            <if test="shSuperiorDealer1 != null">
+                sh_superior_dealer_1 = #{shSuperiorDealer1,jdbcType=VARCHAR},
+            </if>
+            <if test="shSuperiorDealer2 != null">
+                sh_superior_dealer_2 = #{shSuperiorDealer2,jdbcType=VARCHAR},
+            </if>
+            <if test="shSuperiorDealer3 != null">
+                sh_superior_dealer_3 = #{shSuperiorDealer3,jdbcType=VARCHAR},
+            </if>
+            <if test="shPaymentRatio != null">
+                sh_payment_ratio = #{shPaymentRatio,jdbcType=INTEGER},
+            </if>
+            <if test="shUserIdA != null">
+                sh_user_id_a = #{shUserIdA,jdbcType=VARCHAR},
+            </if>
+            <if test="shPaymentRatioA != null">
+                sh_payment_ratio_a = #{shPaymentRatioA,jdbcType=INTEGER},
+            </if>
+            <if test="shUserIdB != null">
+                sh_user_id_b = #{shUserIdB,jdbcType=VARCHAR},
+            </if>
+            <if test="shPaymentRatioB != null">
+                sh_payment_ratio_b = #{shPaymentRatioB,jdbcType=INTEGER},
+            </if>
+            <if test="openidState != null">
+                openid_state = #{openidState,jdbcType=INTEGER},
+            </if>
+            <if test="withdrawSms != null">
+                withdraw_sms = #{withdrawSms,jdbcType=VARCHAR},
+            </if>
+            <if test="withdrawSmsTime != null">
+                withdraw_sms_time = #{withdrawSmsTime,jdbcType=VARCHAR},
+            </if>
+            <if test="passwordSms != null">
+                password_sms = #{passwordSms,jdbcType=VARCHAR},
+            </if>
+            <if test="passwordSmsTime != null">
+                password_sms_time = #{passwordSmsTime,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.leifeng.models.Userinfo">
+    update UserInfo
+    set sh_user_id = #{shUserId,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      sh_real_name = #{shRealName,jdbcType=VARCHAR},
+      sh_openid = #{shOpenid,jdbcType=VARCHAR},
+      income = #{income,jdbcType=INTEGER},
+      balance = #{balance,jdbcType=INTEGER},
+      rate = #{rate,jdbcType=INTEGER},
+      transfer = #{transfer,jdbcType=INTEGER},
+      handling_fee = #{handlingFee,jdbcType=INTEGER},
+      sh_company_name = #{shCompanyName,jdbcType=VARCHAR},
+      sh_phone = #{shPhone,jdbcType=VARCHAR},
+      sh_level = #{shLevel,jdbcType=INTEGER},
+      sh_superior_dealer_0 = #{shSuperiorDealer0,jdbcType=VARCHAR},
+      sh_superior_dealer_1 = #{shSuperiorDealer1,jdbcType=VARCHAR},
+      sh_superior_dealer_2 = #{shSuperiorDealer2,jdbcType=VARCHAR},
+      sh_superior_dealer_3 = #{shSuperiorDealer3,jdbcType=VARCHAR},
+      sh_payment_ratio = #{shPaymentRatio,jdbcType=INTEGER},
+      sh_user_id_a = #{shUserIdA,jdbcType=VARCHAR},
+      sh_payment_ratio_a = #{shPaymentRatioA,jdbcType=INTEGER},
+      sh_user_id_b = #{shUserIdB,jdbcType=VARCHAR},
+      sh_payment_ratio_b = #{shPaymentRatioB,jdbcType=INTEGER},
+      openid_state = #{openidState,jdbcType=INTEGER},
+      withdraw_sms = #{withdrawSms,jdbcType=VARCHAR},
+      withdraw_sms_time = #{withdrawSmsTime,jdbcType=VARCHAR},
+      password_sms = #{passwordSms,jdbcType=VARCHAR},
+      password_sms_time = #{passwordSmsTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

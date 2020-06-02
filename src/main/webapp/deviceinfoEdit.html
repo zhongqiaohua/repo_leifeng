@@ -1,0 +1,100 @@
+<html>
+<body>
+<link rel="stylesheet" href="plugins/layui/css/layui.css" media="all">
+<script src="plugins/layui/layui.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<div class="layui-col-sm6">
+    <form class="layui-form" action="">
+        <div class="layui-form-item layui-col-md3">
+            <label class="layui-form-label">设备编号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="deviceId" id="deviceId" required lay-verify="required" autocomplete="off"
+                       class="layui-input" style="border:none;" disabled />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属商户</label>
+            <div class="layui-input-inline">
+                <select name="shUserId"  id="shUserId" class="shUserId" lay-filter="noshUserId" lay-search="">
+                    <option value="">商户</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属网点</label>
+            <div class="layui-input-inline">
+                <select name="network" lay-verify="required" lay-search="" id="network">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    //Demo
+    layui.use('form', function () {
+        var form = layui.form;
+        var index = parent.layer.getFrameIndex(window.name);
+        var $ = layui.jquery, layer = layui.layer;
+        var RshUserId = "雷风";
+        // 商户
+        $.get("/lf/Deviceinfo/linkageShUserId?shUserId="+RshUserId, function (data) {
+            for (var i = 0; i < data.length; i++) {
+                var option = "<option value='" + data[i] + "'>" + data[i] + "</option>";
+                $("select[name=shUserId]").append(option);
+            }
+            layui.form.render('select', 'devFrom');
+            form.render('select');
+            return false;
+        });
+        //商户值发生变化事件
+        form.on('select(noshUserId)', function(data){
+            var shUserId =$("#shUserId").val();
+            $.ajax({
+                url: "/lf/Deviceinfo/linkageNetwork?shUserId="+shUserId,//带参数将这个传到后台条件查询方法里面
+                type: "post",
+                dataType : "json",
+                contentType : "application/json",
+                async: false,//同步
+                success: function (result) {
+                    if(result.length==0){
+                        var opt = "<option value=\"\">该商户无网点</option>";
+                        $("select[name=network]").append(opt);
+                    }
+                    else{
+                        var opt = "<option value=\"\">网点</option>";
+                        $("select[name=network]").append(opt);
+                        for (var i = 0; i < result.length; i++) {
+                            var option = "<option value='" + result[i] + "'>" + result[i] + "</option>";
+                            $("select[name=network]").append(option);
+                        }
+                    }
+                    layui.form.render('select', 'devFrom');
+                }
+            });
+            form.render('select');//最后记得渲染
+            return false;
+        });
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            $.ajax({
+                url: '/lf/Deviceinfo/updateShUserId',
+                type: "get",
+                data:"deviceId="+data.field.deviceId
+                +"&shUserId="+data.field.shUserId
+                +"&network="+data.field.network,
+                success: function(suc) {
+
+                }
+            });
+            parent.layer.close(index);
+        });
+    });
+</script>
+</body>
+</html>

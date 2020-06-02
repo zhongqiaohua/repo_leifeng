@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.leifeng.dao.PayorderMapper">
+  <resultMap id="BaseResultMap" type="com.example.leifeng.models.Payorder">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="nonce_str" jdbcType="VARCHAR" property="nonceStr" />
+    <result column="sign" jdbcType="VARCHAR" property="sign" />
+    <result column="sign_type" jdbcType="VARCHAR" property="signType" />
+    <result column="body" jdbcType="VARCHAR" property="body" />
+    <result column="detail" jdbcType="VARCHAR" property="detail" />
+    <result column="attach" jdbcType="VARCHAR" property="attach" />
+    <result column="out_trade_no" jdbcType="VARCHAR" property="outTradeNo" />
+    <result column="fee_type" jdbcType="VARCHAR" property="feeType" />
+    <result column="total_fee" jdbcType="INTEGER" property="totalFee" />
+    <result column="spbill_create_ip" jdbcType="VARCHAR" property="spbillCreateIp" />
+    <result column="time_start" jdbcType="VARCHAR" property="timeStart" />
+    <result column="time_expire" jdbcType="VARCHAR" property="timeExpire" />
+    <result column="goods_tag" jdbcType="VARCHAR" property="goodsTag" />
+    <result column="notify_url" jdbcType="VARCHAR" property="notifyUrl" />
+    <result column="trade_type" jdbcType="VARCHAR" property="tradeType" />
+    <result column="product_id" jdbcType="VARCHAR" property="productId" />
+    <result column="limit_pay" jdbcType="VARCHAR" property="limitPay" />
+    <result column="openid" jdbcType="VARCHAR" property="openid" />
+    <result column="receipt" jdbcType="VARCHAR" property="receipt" />
+    <result column="scene_info" jdbcType="VARCHAR" property="sceneInfo" />
+    <result column="pay_success" jdbcType="VARCHAR" property="paySuccess" />
+    <result column="control_start" jdbcType="VARCHAR" property="controlStart" />
+    <result column="control_stop" jdbcType="VARCHAR" property="controlStop" />
+    <result column="control_finish" jdbcType="VARCHAR" property="controlFinish" />
+    <result column="refund" jdbcType="VARCHAR" property="refund" />
+    <result column="prepay_id" jdbcType="VARCHAR" property="prepayId" />
+    <result column="code_url" jdbcType="VARCHAR" property="codeUrl" />
+    <result column="callbackData" jdbcType="VARCHAR" property="callbackdata" />
+    <result column="transaction_id" jdbcType="VARCHAR" property="transactionId" />
+    <result column="refund_fee" jdbcType="INTEGER" property="refundFee" />
+    <result column="out_refund_no" jdbcType="VARCHAR" property="outRefundNo" />
+    <result column="sh_code" jdbcType="VARCHAR" property="shCode" />
+    <result column="dev_code" jdbcType="VARCHAR" property="devCode" />
+    <result column="dev_type" jdbcType="VARCHAR" property="devType" />
+    <result column="device_info" jdbcType="VARCHAR" property="deviceInfo" />
+    <result column="date" jdbcType="VARCHAR" property="date" />
+    <result column="time" jdbcType="VARCHAR" property="time" />
+    <result column="sh_user_id" jdbcType="VARCHAR" property="shUserId" />
+    <result column="transfer" jdbcType="VARCHAR" property="transfer" />
+    <result column="chargeType" jdbcType="INTEGER" property="chargetype" />
+    <result column="usedMoney" jdbcType="INTEGER" property="usedmoney" />
+    <result column="pay_type" jdbcType="VARCHAR" property="payType" />
+    <result column="userid" jdbcType="VARCHAR" property="userid" />
+    <result column="stop_code" jdbcType="VARCHAR" property="stopCode" />
+    <result column="chargePower" jdbcType="INTEGER" property="chargepower" />
+    <result column="userCountMoney" jdbcType="INTEGER" property="usercountmoney" />
+    <result column="checkFlag" jdbcType="INTEGER" property="checkflag" />
+    <result column="chargeCurrent" jdbcType="INTEGER" property="chargecurrent" />
+    <result column="chargeState" jdbcType="INTEGER" property="chargestate" />
+    <result column="chargePresetTime" jdbcType="INTEGER" property="chargepresettime" />
+    <result column="chargeRemainingTime" jdbcType="INTEGER" property="chargeremainingtime" />
+    <result column="scaleOfFees" jdbcType="INTEGER" property="scaleoffees" />
+    <result column="haveChargeTime" jdbcType="INTEGER" property="havechargetime" />
+    <result column="add_time_type" jdbcType="INTEGER" property="addTimeType" />
+    <result column="SerialNo" jdbcType="VARCHAR" property="serialno" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, nonce_str, sign, sign_type, body, detail, attach, out_trade_no, fee_type, total_fee,
+    spbill_create_ip, time_start, time_expire, goods_tag, notify_url, trade_type, product_id,
+    limit_pay, openid, receipt, scene_info, pay_success, control_start, control_stop,
+    control_finish, refund, prepay_id, code_url, callbackData, transaction_id, refund_fee,
+    out_refund_no, sh_code, dev_code, dev_type, device_info, date, time, sh_user_id,
+    transfer, chargeType, usedMoney, pay_type, userid, stop_code, chargePower, userCountMoney,
+    checkFlag, chargeCurrent, chargeState, chargePresetTime, chargeRemainingTime, scaleOfFees,
+    haveChargeTime, add_time_type, SerialNo
+  </sql>
+  <!--<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">-->
+    <!--select-->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from PayOrder-->
+    <!--where id = #{id,jdbcType=INTEGER}-->
+  <!--</select>-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from PayOrder
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.leifeng.models.Payorder">
+    insert into PayOrder (id, nonce_str, sign,
+      sign_type, body, detail,
+      attach, out_trade_no, fee_type,
+      total_fee, spbill_create_ip, time_start,
+      time_expire, goods_tag, notify_url,
+      trade_type, product_id, limit_pay,
+      openid, receipt, scene_info,
+      pay_success, control_start, control_stop,
+      control_finish, refund, prepay_id,
+      code_url, callbackData, transaction_id,
+      refund_fee, out_refund_no, sh_code,
+      dev_code, dev_type, device_info,
+      date, time, sh_user_id,
+      transfer, chargeType, usedMoney,
+      pay_type, userid, stop_code,
+      chargePower, userCountMoney, checkFlag,
+      chargeCurrent, chargeState, chargePresetTime,
+      chargeRemainingTime, scaleOfFees, haveChargeTime,
+      add_time_type, SerialNo)
+    values (#{id,jdbcType=INTEGER}, #{nonceStr,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR},
+      #{signType,jdbcType=VARCHAR}, #{body,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR},
+      #{attach,jdbcType=VARCHAR}, #{outTradeNo,jdbcType=VARCHAR}, #{feeType,jdbcType=VARCHAR},
+      #{totalFee,jdbcType=INTEGER}, #{spbillCreateIp,jdbcType=VARCHAR}, #{timeStart,jdbcType=VARCHAR},
+      #{timeExpire,jdbcType=VARCHAR}, #{goodsTag,jdbcType=VARCHAR}, #{notifyUrl,jdbcType=VARCHAR},
+      #{tradeType,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR}, #{limitPay,jdbcType=VARCHAR},
+      #{openid,jdbcType=VARCHAR}, #{receipt,jdbcType=VARCHAR}, #{sceneInfo,jdbcType=VARCHAR},
+      #{paySuccess,jdbcType=VARCHAR}, #{controlStart,jdbcType=VARCHAR}, #{controlStop,jdbcType=VARCHAR},
+      #{controlFinish,jdbcType=VARCHAR}, #{refund,jdbcType=VARCHAR}, #{prepayId,jdbcType=VARCHAR},
+      #{codeUrl,jdbcType=VARCHAR}, #{callbackdata,jdbcType=VARCHAR}, #{transactionId,jdbcType=VARCHAR},
+      #{refundFee,jdbcType=INTEGER}, #{outRefundNo,jdbcType=VARCHAR}, #{shCode,jdbcType=VARCHAR},
+      #{devCode,jdbcType=VARCHAR}, #{devType,jdbcType=VARCHAR}, #{deviceInfo,jdbcType=VARCHAR},
+      #{date,jdbcType=VARCHAR}, #{time,jdbcType=VARCHAR}, #{shUserId,jdbcType=VARCHAR},
+      #{transfer,jdbcType=VARCHAR}, #{chargetype,jdbcType=INTEGER}, #{usedmoney,jdbcType=INTEGER},
+      #{payType,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{stopCode,jdbcType=VARCHAR},
+      #{chargepower,jdbcType=INTEGER}, #{usercountmoney,jdbcType=INTEGER}, #{checkflag,jdbcType=INTEGER},
+      #{chargecurrent,jdbcType=INTEGER}, #{chargestate,jdbcType=INTEGER}, #{chargepresettime,jdbcType=INTEGER},
+      #{chargeremainingtime,jdbcType=INTEGER}, #{scaleoffees,jdbcType=INTEGER}, #{havechargetime,jdbcType=INTEGER},
+      #{addTimeType,jdbcType=INTEGER}, #{serialno,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.leifeng.models.Payorder">
+    insert into PayOrder
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="nonceStr != null">
+        nonce_str,
+      </if>
+      <if test="sign != null">
+        sign,
+      </if>
+      <if test="signType != null">
+        sign_type,
+      </if>
+      <if test="body != null">
+        body,
+      </if>
+      <if test="detail != null">
+        detail,
+      </if>
+      <if test="attach != null">
+        attach,
+      </if>
+      <if test="outTradeNo != null">
+        out_trade_no,
+      </if>
+      <if test="feeType != null">
+        fee_type,
+      </if>
+      <if test="totalFee != null">
+        total_fee,
+      </if>
+      <if test="spbillCreateIp != null">
+        spbill_create_ip,
+      </if>
+      <if test="timeStart != null">
+        time_start,
+      </if>
+      <if test="timeExpire != null">
+        time_expire,
+      </if>
+      <if test="goodsTag != null">
+        goods_tag,
+      </if>
+      <if test="notifyUrl != null">
+        notify_url,
+      </if>
+      <if test="tradeType != null">
+        trade_type,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="limitPay != null">
+        limit_pay,
+      </if>
+      <if test="openid != null">
+        openid,
+      </if>
+      <if test="receipt != null">
+        receipt,
+      </if>
+      <if test="sceneInfo != null">
+        scene_info,
+      </if>
+      <if test="paySuccess != null">
+        pay_success,
+      </if>
+      <if test="controlStart != null">
+        control_start,
+      </if>
+      <if test="controlStop != null">
+        control_stop,
+      </if>
+      <if test="controlFinish != null">
+        control_finish,
+      </if>
+      <if test="refund != null">
+        refund,
+      </if>
+      <if test="prepayId != null">
+        prepay_id,
+      </if>
+      <if test="codeUrl != null">
+        code_url,
+      </if>
+      <if test="callbackdata != null">
+        callbackData,
+      </if>
+      <if test="transactionId != null">
+        transaction_id,
+      </if>
+      <if test="refundFee != null">
+        refund_fee,
+      </if>
+      <if test="outRefundNo != null">
+        out_refund_no,
+      </if>
+      <if test="shCode != null">
+        sh_code,
+      </if>
+      <if test="devCode != null">
+        dev_code,
+      </if>
+      <if test="devType != null">
+        dev_type,
+      </if>
+      <if test="deviceInfo != null">
+        device_info,
+      </if>
+      <if test="date != null">
+        date,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+      <if test="shUserId != null">
+        sh_user_id,
+      </if>
+      <if test="transfer != null">
+        transfer,
+      </if>
+      <if test="chargetype != null">
+        chargeType,
+      </if>
+      <if test="usedmoney != null">
+        usedMoney,
+      </if>
+      <if test="payType != null">
+        pay_type,
+      </if>
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="stopCode != null">
+        stop_code,
+      </if>
+      <if test="chargepower != null">
+        chargePower,
+      </if>
+      <if test="usercountmoney != null">
+        userCountMoney,
+      </if>
+      <if test="checkflag != null">
+        checkFlag,
+      </if>
+      <if test="chargecurrent != null">
+        chargeCurrent,
+      </if>
+      <if test="chargestate != null">
+        chargeState,
+      </if>
+      <if test="chargepresettime != null">
+        chargePresetTime,
+      </if>
+      <if test="chargeremainingtime != null">
+        chargeRemainingTime,
+      </if>
+      <if test="scaleoffees != null">
+        scaleOfFees,
+      </if>
+      <if test="havechargetime != null">
+        haveChargeTime,
+      </if>
+      <if test="addTimeType != null">
+        add_time_type,
+      </if>
+      <if test="serialno != null">
+        SerialNo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="nonceStr != null">
+        #{nonceStr,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null">
+        #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="signType != null">
+        #{signType,jdbcType=VARCHAR},
+      </if>
+      <if test="body != null">
+        #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null">
+        #{detail,jdbcType=VARCHAR},
+      </if>
+      <if test="attach != null">
+        #{attach,jdbcType=VARCHAR},
+      </if>
+      <if test="outTradeNo != null">
+        #{outTradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="feeType != null">
+        #{feeType,jdbcType=VARCHAR},
+      </if>
+      <if test="totalFee != null">
+        #{totalFee,jdbcType=INTEGER},
+      </if>
+      <if test="spbillCreateIp != null">
+        #{spbillCreateIp,jdbcType=VARCHAR},
+      </if>
+      <if test="timeStart != null">
+        #{timeStart,jdbcType=VARCHAR},
+      </if>
+      <if test="timeExpire != null">
+        #{timeExpire,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsTag != null">
+        #{goodsTag,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyUrl != null">
+        #{notifyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeType != null">
+        #{tradeType,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="limitPay != null">
+        #{limitPay,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null">
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="receipt != null">
+        #{receipt,jdbcType=VARCHAR},
+      </if>
+      <if test="sceneInfo != null">
+        #{sceneInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="paySuccess != null">
+        #{paySuccess,jdbcType=VARCHAR},
+      </if>
+      <if test="controlStart != null">
+        #{controlStart,jdbcType=VARCHAR},
+      </if>
+      <if test="controlStop != null">
+        #{controlStop,jdbcType=VARCHAR},
+      </if>
+      <if test="controlFinish != null">
+        #{controlFinish,jdbcType=VARCHAR},
+      </if>
+      <if test="refund != null">
+        #{refund,jdbcType=VARCHAR},
+      </if>
+      <if test="prepayId != null">
+        #{prepayId,jdbcType=VARCHAR},
+      </if>
+      <if test="codeUrl != null">
+        #{codeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="callbackdata != null">
+        #{callbackdata,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionId != null">
+        #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="refundFee != null">
+        #{refundFee,jdbcType=INTEGER},
+      </if>
+      <if test="outRefundNo != null">
+        #{outRefundNo,jdbcType=VARCHAR},
+      </if>
+      <if test="shCode != null">
+        #{shCode,jdbcType=VARCHAR},
+      </if>
+      <if test="devCode != null">
+        #{devCode,jdbcType=VARCHAR},
+      </if>
+      <if test="devType != null">
+        #{devType,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceInfo != null">
+        #{deviceInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="shUserId != null">
+        #{shUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="transfer != null">
+        #{transfer,jdbcType=VARCHAR},
+      </if>
+      <if test="chargetype != null">
+        #{chargetype,jdbcType=INTEGER},
+      </if>
+      <if test="usedmoney != null">
+        #{usedmoney,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null">
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="stopCode != null">
+        #{stopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="chargepower != null">
+        #{chargepower,jdbcType=INTEGER},
+      </if>
+      <if test="usercountmoney != null">
+        #{usercountmoney,jdbcType=INTEGER},
+      </if>
+      <if test="checkflag != null">
+        #{checkflag,jdbcType=INTEGER},
+      </if>
+      <if test="chargecurrent != null">
+        #{chargecurrent,jdbcType=INTEGER},
+      </if>
+      <if test="chargestate != null">
+        #{chargestate,jdbcType=INTEGER},
+      </if>
+      <if test="chargepresettime != null">
+        #{chargepresettime,jdbcType=INTEGER},
+      </if>
+      <if test="chargeremainingtime != null">
+        #{chargeremainingtime,jdbcType=INTEGER},
+      </if>
+      <if test="scaleoffees != null">
+        #{scaleoffees,jdbcType=INTEGER},
+      </if>
+      <if test="havechargetime != null">
+        #{havechargetime,jdbcType=INTEGER},
+      </if>
+      <if test="addTimeType != null">
+        #{addTimeType,jdbcType=INTEGER},
+      </if>
+      <if test="serialno != null">
+        #{serialno,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.leifeng.models.Payorder">
+    update PayOrder
+    <set>
+      <if test="nonceStr != null">
+        nonce_str = #{nonceStr,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null">
+        sign = #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="signType != null">
+        sign_type = #{signType,jdbcType=VARCHAR},
+      </if>
+      <if test="body != null">
+        body = #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null">
+        detail = #{detail,jdbcType=VARCHAR},
+      </if>
+      <if test="attach != null">
+        attach = #{attach,jdbcType=VARCHAR},
+      </if>
+      <if test="outTradeNo != null">
+        out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="feeType != null">
+        fee_type = #{feeType,jdbcType=VARCHAR},
+      </if>
+      <if test="totalFee != null">
+        total_fee = #{totalFee,jdbcType=INTEGER},
+      </if>
+      <if test="spbillCreateIp != null">
+        spbill_create_ip = #{spbillCreateIp,jdbcType=VARCHAR},
+      </if>
+      <if test="timeStart != null">
+        time_start = #{timeStart,jdbcType=VARCHAR},
+      </if>
+      <if test="timeExpire != null">
+        time_expire = #{timeExpire,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsTag != null">
+        goods_tag = #{goodsTag,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyUrl != null">
+        notify_url = #{notifyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeType != null">
+        trade_type = #{tradeType,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="limitPay != null">
+        limit_pay = #{limitPay,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null">
+        openid = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="receipt != null">
+        receipt = #{receipt,jdbcType=VARCHAR},
+      </if>
+      <if test="sceneInfo != null">
+        scene_info = #{sceneInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="paySuccess != null">
+        pay_success = #{paySuccess,jdbcType=VARCHAR},
+      </if>
+      <if test="controlStart != null">
+        control_start = #{controlStart,jdbcType=VARCHAR},
+      </if>
+      <if test="controlStop != null">
+        control_stop = #{controlStop,jdbcType=VARCHAR},
+      </if>
+      <if test="controlFinish != null">
+        control_finish = #{controlFinish,jdbcType=VARCHAR},
+      </if>
+      <if test="refund != null">
+        refund = #{refund,jdbcType=VARCHAR},
+      </if>
+      <if test="prepayId != null">
+        prepay_id = #{prepayId,jdbcType=VARCHAR},
+      </if>
+      <if test="codeUrl != null">
+        code_url = #{codeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="callbackdata != null">
+        callbackData = #{callbackdata,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionId != null">
+        transaction_id = #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="refundFee != null">
+        refund_fee = #{refundFee,jdbcType=INTEGER},
+      </if>
+      <if test="outRefundNo != null">
+        out_refund_no = #{outRefundNo,jdbcType=VARCHAR},
+      </if>
+      <if test="shCode != null">
+        sh_code = #{shCode,jdbcType=VARCHAR},
+      </if>
+      <if test="devCode != null">
+        dev_code = #{devCode,jdbcType=VARCHAR},
+      </if>
+      <if test="devType != null">
+        dev_type = #{devType,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceInfo != null">
+        device_info = #{deviceInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        date = #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        time = #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="shUserId != null">
+        sh_user_id = #{shUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="transfer != null">
+        transfer = #{transfer,jdbcType=VARCHAR},
+      </if>
+      <if test="chargetype != null">
+        chargeType = #{chargetype,jdbcType=INTEGER},
+      </if>
+      <if test="usedmoney != null">
+        usedMoney = #{usedmoney,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null">
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="stopCode != null">
+        stop_code = #{stopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="chargepower != null">
+        chargePower = #{chargepower,jdbcType=INTEGER},
+      </if>
+      <if test="usercountmoney != null">
+        userCountMoney = #{usercountmoney,jdbcType=INTEGER},
+      </if>
+      <if test="checkflag != null">
+        checkFlag = #{checkflag,jdbcType=INTEGER},
+      </if>
+      <if test="chargecurrent != null">
+        chargeCurrent = #{chargecurrent,jdbcType=INTEGER},
+      </if>
+      <if test="chargestate != null">
+        chargeState = #{chargestate,jdbcType=INTEGER},
+      </if>
+      <if test="chargepresettime != null">
+        chargePresetTime = #{chargepresettime,jdbcType=INTEGER},
+      </if>
+      <if test="chargeremainingtime != null">
+        chargeRemainingTime = #{chargeremainingtime,jdbcType=INTEGER},
+      </if>
+      <if test="scaleoffees != null">
+        scaleOfFees = #{scaleoffees,jdbcType=INTEGER},
+      </if>
+      <if test="havechargetime != null">
+        haveChargeTime = #{havechargetime,jdbcType=INTEGER},
+      </if>
+      <if test="addTimeType != null">
+        add_time_type = #{addTimeType,jdbcType=INTEGER},
+      </if>
+      <if test="serialno != null">
+        SerialNo = #{serialno,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.leifeng.models.Payorder">
+    update PayOrder
+    set nonce_str = #{nonceStr,jdbcType=VARCHAR},
+      sign = #{sign,jdbcType=VARCHAR},
+      sign_type = #{signType,jdbcType=VARCHAR},
+      body = #{body,jdbcType=VARCHAR},
+      detail = #{detail,jdbcType=VARCHAR},
+      attach = #{attach,jdbcType=VARCHAR},
+      out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+      fee_type = #{feeType,jdbcType=VARCHAR},
+      total_fee = #{totalFee,jdbcType=INTEGER},
+      spbill_create_ip = #{spbillCreateIp,jdbcType=VARCHAR},
+      time_start = #{timeStart,jdbcType=VARCHAR},
+      time_expire = #{timeExpire,jdbcType=VARCHAR},
+      goods_tag = #{goodsTag,jdbcType=VARCHAR},
+      notify_url = #{notifyUrl,jdbcType=VARCHAR},
+      trade_type = #{tradeType,jdbcType=VARCHAR},
+      product_id = #{productId,jdbcType=VARCHAR},
+      limit_pay = #{limitPay,jdbcType=VARCHAR},
+      openid = #{openid,jdbcType=VARCHAR},
+      receipt = #{receipt,jdbcType=VARCHAR},
+      scene_info = #{sceneInfo,jdbcType=VARCHAR},
+      pay_success = #{paySuccess,jdbcType=VARCHAR},
+      control_start = #{controlStart,jdbcType=VARCHAR},
+      control_stop = #{controlStop,jdbcType=VARCHAR},
+      control_finish = #{controlFinish,jdbcType=VARCHAR},
+      refund = #{refund,jdbcType=VARCHAR},
+      prepay_id = #{prepayId,jdbcType=VARCHAR},
+      code_url = #{codeUrl,jdbcType=VARCHAR},
+      callbackData = #{callbackdata,jdbcType=VARCHAR},
+      transaction_id = #{transactionId,jdbcType=VARCHAR},
+      refund_fee = #{refundFee,jdbcType=INTEGER},
+      out_refund_no = #{outRefundNo,jdbcType=VARCHAR},
+      sh_code = #{shCode,jdbcType=VARCHAR},
+      dev_code = #{devCode,jdbcType=VARCHAR},
+      dev_type = #{devType,jdbcType=VARCHAR},
+      device_info = #{deviceInfo,jdbcType=VARCHAR},
+      date = #{date,jdbcType=VARCHAR},
+      time = #{time,jdbcType=VARCHAR},
+      sh_user_id = #{shUserId,jdbcType=VARCHAR},
+      transfer = #{transfer,jdbcType=VARCHAR},
+      chargeType = #{chargetype,jdbcType=INTEGER},
+      usedMoney = #{usedmoney,jdbcType=INTEGER},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      userid = #{userid,jdbcType=VARCHAR},
+      stop_code = #{stopCode,jdbcType=VARCHAR},
+      chargePower = #{chargepower,jdbcType=INTEGER},
+      userCountMoney = #{usercountmoney,jdbcType=INTEGER},
+      checkFlag = #{checkflag,jdbcType=INTEGER},
+      chargeCurrent = #{chargecurrent,jdbcType=INTEGER},
+      chargeState = #{chargestate,jdbcType=INTEGER},
+      chargePresetTime = #{chargepresettime,jdbcType=INTEGER},
+      chargeRemainingTime = #{chargeremainingtime,jdbcType=INTEGER},
+      scaleOfFees = #{scaleoffees,jdbcType=INTEGER},
+      haveChargeTime = #{havechargetime,jdbcType=INTEGER},
+      add_time_type = #{addTimeType,jdbcType=INTEGER},
+      SerialNo = #{serialno,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

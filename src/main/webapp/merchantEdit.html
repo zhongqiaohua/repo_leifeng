@@ -1,0 +1,61 @@
+<html>
+<body>
+<link rel="stylesheet" href="plugins/layui/css/layui.css" media="all">
+<script src="plugins/layui/layui.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<div class="layui-col-sm6">
+    <form class="layui-form" action="">
+        <div class="layui-form-item layui-col-md3">
+            <label class="layui-form-label">商户名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="shUserId" id="shUserId" required lay-verify="required" autocomplete="off"
+                       class="layui-input" style="border:none;" readonly />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">负责人</label>
+            <div class="layui-input-inline">
+                <input type="text" name="shRealName" id="shRealName" required lay-verify="required" autocomplete="off"
+                       class="layui-input"  />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">联系电话</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="shPhone" id="shPhone" lay-verify="required|phone" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    //Demo
+    layui.use('form', function () {
+        var form = layui.form;
+        var index = parent.layer.getFrameIndex(window.name);
+        var $ = layui.jquery, layer = layui.layer;
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            $.ajax({
+                url: '/lf/user/updateMerchant',
+                type: "get",
+                data:"shUserId="+data.field.shUserId
+                +"&shRealName="+data.field.shRealName
+                +"&shPhone="+data.field.shPhone,
+                success: function(suc) {
+
+                }
+            });
+            parent.layer.close(index);
+        });
+    });
+</script>
+</body>
+</html>

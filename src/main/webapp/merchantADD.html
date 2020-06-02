@@ -1,0 +1,100 @@
+<html>
+<body>
+<link rel="stylesheet" href="plugins/layui/css/layui.css" media="all">
+<script src="plugins/layui/layui.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<div class="layui-col-sm6">
+    <form class="layui-form" action="">
+        <div class="layui-form-item layui-col-md3">
+            <label class="layui-form-label">当前商家</label>
+            <div class="layui-input-inline">
+                <input type="text" name="shUserIdUp" id="shUserIdUp" required lay-verify="required" autocomplete="off"
+                       class="layui-input" style="border:none;" readonly />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商家名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="shUserId" id="shUserId" required lay-verify="required" autocomplete="off"
+                       class="layui-input"  />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">负责人</label>
+            <div class="layui-input-inline">
+                <input type="text" name="shRealName" id="shRealName" required lay-verify="required" autocomplete="off"
+                       class="layui-input"  />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机号</label>
+            <div class="layui-input-inline">
+                <input type="tel" name="shPhone" id="shPhone" lay-verify="required|phone" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">分红比例</label>
+            <div class="layui-input-inline">
+                <input type="text" name="shPaymentRatio" id="shPaymentRatio" required lay-verify="required" autocomplete="off"
+                       value="100" class="layui-input"  />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    //Demo
+    layui.use('form', function () {
+        var form = layui.form;
+        var index = parent.layer.getFrameIndex(window.name);
+        var $ = layui.jquery, layer = layui.layer;
+        //监听提交
+       $("#shUserId").blur(function(){//检查商户是否已注册
+          var shUserId = $("#shUserId").val();
+          if(shUserId === ''){
+              return;
+          }
+          else{
+              $.ajax({
+                  url: '/lf/user/examineUser',
+                  type: "get",
+                  data:"shUserId="+shUserId,
+                  success: function(suc) {
+                      if(suc === 1){
+                          layer.msg(shUserId+"：商户已存在！");
+                          $("#shUserId").val("");
+                      }
+                  }
+              });
+              return;
+          }
+
+       });
+        form.on('submit(formDemo)', function (data) {
+            if(data.field.shPaymentRatio > 100 || data.field.shPaymentRatio < 0){
+                layer.msg("所占比例错误！");
+                return false;
+            }
+            $.ajax({
+                url: '/lf/user/addUser',
+                type: "get",
+                data:"shUserIdUp="+data.field.shUserIdUp
+                +"&shUserId="+data.field.shUserId
+                +"&shRealName="+data.field.shRealName
+                +"&shPhone="+data.field.shPhone
+                +"&shPaymentRatio="+data.field.shPaymentRatio,
+                success: function(suc) {
+
+                }
+            });
+            parent.layer.close(index);
+        });
+    });
+</script>
+</body>
+</html>

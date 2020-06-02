@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>商家列表</title>
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="./plugins/font-awesome/css/font-awesome.min.css" media="all">
+    <style type="text/css">
+        .csbutton {
+            width: 15px;
+            height: 15px;
+        }
+
+        .line {
+            color: #40f74f;
+            border: 1px solid #43f722;
+            border-radius: 4em;
+            background-color: #43f722;
+        }
+
+        .off-line {
+            color: #e4e4e4;
+            border: 1px solid #e1e2e0;
+            border-radius: 4em;
+            background-color: #e4e4e4;
+        }
+    </style>
+</head>
+<body>
+<div class="demoTable" style="margin: 5px;line-height: 50px;">
+    <div class="layui-col-md3">
+        <form class="layui-form" action="" name="devFrom">
+            <div class="layui-inline">
+                <select name="shUserId"  id="shUserId" class="shUserId" lay-filter="noshUserId" lay-search="">
+                    <option value="">商户</option>
+                </select>
+            </div>
+            <button class="layui-btn addMerchant"  lay-filter="" lay-event="addMerchant">查找</button>
+            <button class="layui-btn reset"  lay-filter="" lay-event="reset">页面重置</button>
+        </form>
+    </div>
+    <div class="layui-col-md9">
+        <div class="layui-col-md3">
+            <text>总收益</text>
+            <div class="layui-inline">
+                <input type="text" id="input1" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="0" style="border:none;" disabled />
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <text>总提现</text>
+            <div class="layui-inline">
+                <input type="text" id="input2" required lay-verify="required" autocomplete="off"
+                       class="layui-input"  value="0" style="border:none;" disabled />
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <text>当前余额</text>
+            <div class="layui-inline">
+                <input type="text" id="input3" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="0" style="border:none;" disabled />
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <text>提现次数</text>
+            <div class="layui-inline">
+                <input type="text" id="input4" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="0" style="border:none;" disabled />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="">
+    <div class="layui-col-sm8">
+        <div class="layui-card-header">商家收益<text style="color: #aaaaaa"> （以下金额单位均为元）</text></div>
+        <table id="idDevice" lay-filter="device"></table>
+    </div>
+    <div class="layui-col-sm4   ">
+        <div class="layui-card-header">商家提现</div>
+        <table id="idDevice2" lay-filter="device"></table>
+    </div>
+</div>
+<script src="plugins/layui/layui.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script>
+    layui.use('table', function () {
+        var table = layui.table, form = layui.form;
+        var $ = layui.jquery, layer = layui.layer;
+        var RshUserId = "雷风";
+        var index = layer.load(2);
+        //第一个实例
+        table.render({
+            id: 'allDevice'
+            , elem: '#idDevice'
+            , checkbox: true
+            , loading: true //翻页加loading
+            // ,toolbar: '#toolbarDemo'
+            , url: '/lf/income/selAllByShUserId?shUserID='+ RshUserId //数据接口
+            , height: $(document).height() - $('#idDevice').offset().top - 35
+            , page: true //开启分页
+            , limits: [10, 20, 30, 50, 100]
+            , limit: 20 //每页默认显示的数量
+            , response: {//开启延迟加载栏
+                statusName: 'code',
+                msgName: 'msg',//状态信息的字段名称，默认：msg
+                countName: 'count', //数据总数的字段名称，默认：count
+                dataName: 'data' //数据列表的字段名称，默认：data
+            }
+            , cols: [[ //表头
+               {field: 'shUserId', title: '商家名称', width: 150,fixed: 'left', sort: true, align: 'center'}
+                , {field: 'allIncome', title: '总收益', width: 120, align: 'center',templet: AllIncome,sort: true}
+                , {field: 'thisMonthIncome', title: '本月收益', width: 120, sort: true,templet: ThisMonthIncome}
+                , {field: 'lastMonthIncome', title: '上月收益', width: 120, sort: true, align: 'center',templet: LastMonthIncome}
+                , {field: 'todayIncome', title: '今日收益', width: 120, sort: true, align: 'center',templet: TodayIncome}
+                , {field: 'remaining', title: '账户余额', width: 120, sort: true,templet: Remaining }
+                , {field: 'transfer', title: '已提现', width: 90,templet: Transfer}
+                , {field: 'withdrawable', title: '可提现', width: 90,templet: Withdrawable}
+                , {field: 'handlingFee', title: '提现费用', width: 100,templet: HandlingFee}
+                , {fixed: 'right', title: '总提现', width: 90, align: 'center',templet: TransferAll}
+                , {field: 'updateincometime', title: '最近操作', width: 125, align: 'center',templet: templet}
+            ]],
+            done: function (res) {
+                // pageCurr = curr;
+                layer.close(index);
+            }
+        });
+        function templet(data) {
+            var updateincometime = new Date(data.updateincometime).toJSON();
+            var date = new Date(+new Date(updateincometime)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+            //date.substr(0,10); //接取2020-04-02
+            return date;
+        }
+        function TransferAll(data) {
+            var transfer = data.transfer;
+            var handlingFee = data.handlingFee;
+            var btns = "";
+            btns += '<text style="color: #212aff">'+(transfer+handlingFee)/100.00+'</text>';
+            return btns;
+        }
+        function Remaining(data) {
+            var allIncome = data.allIncome;
+            var transfer = data.transfer;
+            var handlingFee = data.handlingFee;
+            var btns = "";
+            btns += (allIncome-transfer-handlingFee)/100.00;
+            return btns;
+        }
+        function AllIncome(data) {
+            var allIncome = data.allIncome;
+            var btns = "";
+            btns += allIncome/100.00;
+            return btns;
+        }
+        function ThisMonthIncome(data) {
+            var thisMonthIncome = data.thisMonthIncome;
+            var btns = "";
+            btns += thisMonthIncome/100.00;
+            return btns;
+        }
+        function LastMonthIncome(data) {
+            var lastMonthIncome = data.lastMonthIncome;
+            var btns = "";
+            btns += lastMonthIncome/100.00;
+            return btns;
+        }
+        function TodayIncome(data) {
+            var todayIncome = data.todayIncome;
+            var btns = "";
+            btns += todayIncome/100.00;
+            return btns;
+        }
+        function Transfer(data) {
+            var transfer = data.transfer;
+            var btns = "";
+            btns += transfer/100.00;
+            return btns;
+        }
+        function Withdrawable(data) {
+            var withdrawable = data.withdrawable;
+            var btns = "";
+            btns += withdrawable/100.00;
+            return btns;
+        }
+        function HandlingFee(data) {
+            var handlingFee = data.handlingFee;
+            var btns = "";
+            btns += handlingFee/100.00;
+            return btns;
+        }
+        table.render({
+            id: 'allDevice2'
+            , elem: '#idDevice2'
+            , checkbox: true
+            , loading: true //翻页加loading
+            // ,toolbar: '#toolbarDemo'
+            , url: '/lf/Transfers/selALL?shUserID=' + RshUserId //数据接口
+            , height: $(document).height() - $('#idDevice2').offset().top - 35
+            , page: true //开启分页
+            , limits: [10, 20, 30, 50, 100]
+            , limit: 20 //每页默认显示的数量
+            , response: {//开启延迟加载栏
+                statusName: 'code',
+                msgName: 'msg',//状态信息的字段名称，默认：msg
+                countName: 'count', //数据总数的字段名称，默认：count
+                dataName: 'data' //数据列表的字段名称，默认：data
+            }
+            , cols: [[ //表头
+                {fixed: 'left', type: 'checkbox'}
+                , {field: 'shUserId', title: '商户名称', width: 120, fixed: 'left', sort: true}
+                , {field: 'amount', title: '提现金额 (元)', width: 120, templet: Amount, align: 'center'}
+                , {field: 'changeMoney', title: '手续费(元)', width: 110, templet: ChangeMoney, align: 'center'}
+                , {field: 'errCode', title: '状态', width: 80,templet: ErrCode, align: 'center'}
+                , {field: 'paymentTime', title: '处理时间', width: 140, sort: true,templet: PaymentTime}
+            ]],
+            done: function (res) {
+                // pageCurr = curr;
+                layer.close(index);
+            }
+
+        });
+        function Amount(date) {
+            var amount = date.amount;
+            var btns = "";
+            btns += amount/100.00;
+            return btns;
+        }
+        function ChangeMoney(date) {
+            var changeMoney = date.changeMoney;
+            var btns = "";
+            btns += changeMoney/100.00;
+            return btns;
+        }
+        function ErrCode(data) {
+            var errCode = data.errCode;
+            var btns = "";
+            if(errCode === '' || errCode === null || errCode === undefined){
+                btns += '<button type="button" class="csbutton line" >  </button>';
+            }
+            else{
+                btns += '<button type="button" class="csbutton off-line" > </button>';
+            }
+            return btns;
+        }
+        function PaymentTime(data) {
+            var paymentTime = data.paymentTime;
+            var btns = "";
+            if(paymentTime === '' || paymentTime === null || paymentTime === undefined){
+                btns += '<text style="color: #f11619">处理失败</text>';
+            }
+            else{
+                btns += paymentTime;
+            }
+            return btns;
+        }
+        // 商户
+        $.get("/lf/Deviceinfo/linkageShUserId?shUserId="+RshUserId, function (data) {
+            var opt = "";
+            for (var i = 0; i < data.length; i++) {
+                var option = "<option value='" + data[i] + "'>" + data[i] + "</option>";
+                $("select[name=shUserId]").append(option);
+            }
+            layui.form.render('select', 'devFrom');
+            form.render('select');
+            return false;
+        });
+        $('.addMerchant').on('click', function () {
+            var shUserId = $('#shUserId').val();
+            table.reload('allDevice', {
+                url: '/lf/income/search',
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                response:{//开启延迟加载栏
+                    statusName: 'code',
+                    msgName: 'msg' ,//状态信息的字段名称，默认：msg
+                    countName: 'count', //数据总数的字段名称，默认：count
+                    dataName: 'data' //数据列表的字段名称，默认：data
+                },
+                where: {
+                    shUserId: shUserId
+                },
+                done: function (res, curr, count) {
+                    // alert(1);//不点击alert的确认对话框的话，table是无法reload完成的，各位可以测试一下
+                    $("#input1").val(res.data[0].allIncome/100);
+                    $("#input2").val((res.data[0].transfer+res.data[0].handlingFee)/100);
+                    $("#input3").val((res.data[0].allIncome-res.data[0].transfer-res.data[0].handlingFee)/100.00);
+                }
+
+            }, 'data');
+            table.reload('allDevice2', {
+                url: '/lf/Transfers/search',
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                response:{//开启延迟加载栏
+                    statusName: 'code',
+                    msgName: 'msg' ,//状态信息的字段名称，默认：msg
+                    countName: 'count', //数据总数的字段名称，默认：count
+                    dataName: 'data' //数据列表的字段名称，默认：data
+                },
+                where: {
+                    shUserId: shUserId
+                },
+                done: function (res, curr, count) {
+                    $("#input4").val(count);
+                }
+
+            }, 'data');
+            return false;
+        });
+        $('.reset').on('click', function () {
+            location = window.location;//
+        });
+    });
+
+</script>
+</body>
+</html>

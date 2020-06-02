@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.leifeng.dao.TransfersMapper">
+  <resultMap id="BaseResultMap" type="com.example.leifeng.models.Transfers">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="sh_user_id" jdbcType="VARCHAR" property="shUserId" />
+    <result column="nonce_str" jdbcType="VARCHAR" property="nonceStr" />
+    <result column="sign" jdbcType="VARCHAR" property="sign" />
+    <result column="partner_trade_no" jdbcType="VARCHAR" property="partnerTradeNo" />
+    <result column="openid" jdbcType="VARCHAR" property="openid" />
+    <result column="check_name" jdbcType="VARCHAR" property="checkName" />
+    <result column="re_user_name" jdbcType="VARCHAR" property="reUserName" />
+    <result column="amount" jdbcType="INTEGER" property="amount" />
+    <result column="spbill_create_ip" jdbcType="VARCHAR" property="spbillCreateIp" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="payment_no" jdbcType="VARCHAR" property="paymentNo" />
+    <result column="payment_time" jdbcType="VARCHAR" property="paymentTime" />
+    <result column="err_code" jdbcType="VARCHAR" property="errCode" />
+    <result column="change_money" jdbcType="INTEGER" property="changeMoney" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, sh_user_id, nonce_str,
+      sign, partner_trade_no, openid,
+      check_name, re_user_name, amount,
+      spbill_create_ip, payment_no,
+      payment_time, err_code, change_money
+  </sql>
+  <select id="search" resultMap="BaseResultMap">
+      SELECT <include refid="Base_Column_List"/> FROM Transfers WHERE sh_user_id = #{param3}
+    ORDER BY payment_time DESC
+    offset #{param2}* #{param1} rows fetch next #{param2} rows only
+  </select>
+  <select id="countSearch" resultType="java.lang.Integer">
+      SELECT COUNT (*) FROM Transfers WHERE sh_user_id = #{param1}
+  </select>
+
+  <select id="selALL" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> FROM Transfers WHERE sh_user_id IN (SELECT sh_user_id FROM UserInfo WHERE
+    sh_superior_dealer_0=#{param3} OR sh_superior_dealer_1=#{param3} OR sh_superior_dealer_2=#{param3} OR
+    sh_superior_dealer_3=#{param3} OR sh_user_id=#{param3})
+    ORDER BY payment_time DESC
+    offset #{param2}* #{param1} rows fetch next #{param2} rows only
+  </select>
+  <select id="countRequestWithdraw" resultType="java.lang.Integer">
+    SELECT COUNT (*) FROM Transfers WHERE sh_user_id IN (SELECT sh_user_id FROM UserInfo WHERE
+    sh_superior_dealer_0=#{param3} OR sh_superior_dealer_1=#{param3} OR sh_superior_dealer_2=#{param3} OR
+    sh_superior_dealer_3=#{param3} OR sh_user_id=#{param3})
+  </select>
+  <insert id="insert" parameterType="com.example.leifeng.models.Transfers">
+    insert into Transfers (id, sh_user_id, nonce_str,
+      sign, partner_trade_no, openid,
+      check_name, re_user_name, amount,
+      spbill_create_ip, payment_no,
+      payment_time, err_code, change_money
+      )
+    values (#{id,jdbcType=INTEGER}, #{shUserId,jdbcType=VARCHAR}, #{nonceStr,jdbcType=VARCHAR},
+      #{sign,jdbcType=VARCHAR}, #{partnerTradeNo,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR},
+      #{checkName,jdbcType=VARCHAR}, #{reUserName,jdbcType=VARCHAR}, #{amount,jdbcType=INTEGER},
+      #{spbillCreateIp,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, #{paymentNo,jdbcType=VARCHAR},
+      #{paymentTime,jdbcType=VARCHAR}, #{errCode,jdbcType=VARCHAR}, #{changeMoney,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.leifeng.models.Transfers">
+    insert into Transfers
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="shUserId != null">
+        sh_user_id,
+      </if>
+      <if test="nonceStr != null">
+        nonce_str,
+      </if>
+      <if test="sign != null">
+        sign,
+      </if>
+      <if test="partnerTradeNo != null">
+        partner_trade_no,
+      </if>
+      <if test="openid != null">
+        openid,
+      </if>
+      <if test="checkName != null">
+        check_name,
+      </if>
+      <if test="reUserName != null">
+        re_user_name,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="spbillCreateIp != null">
+        spbill_create_ip,
+      </if>
+      <if test="paymentNo != null">
+        payment_no,
+      </if>
+      <if test="paymentTime != null">
+        payment_time,
+      </if>
+      <if test="errCode != null">
+        err_code,
+      </if>
+      <if test="changeMoney != null">
+        change_money,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="shUserId != null">
+        #{shUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="nonceStr != null">
+        #{nonceStr,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null">
+        #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="partnerTradeNo != null">
+        #{partnerTradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null">
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="checkName != null">
+        #{checkName,jdbcType=VARCHAR},
+      </if>
+      <if test="reUserName != null">
+        #{reUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="spbillCreateIp != null">
+        #{spbillCreateIp,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null">
+        #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentNo != null">
+        #{paymentNo,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTime != null">
+        #{paymentTime,jdbcType=VARCHAR},
+      </if>
+      <if test="errCode != null">
+        #{errCode,jdbcType=VARCHAR},
+      </if>
+      <if test="changeMoney != null">
+        #{changeMoney,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

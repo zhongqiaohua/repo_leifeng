@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.leifeng.dao.DeviceonlinehistoryMapper">
+  <resultMap id="BaseResultMap" type="com.example.leifeng.models.Deviceonlinehistory">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="date" jdbcType="VARCHAR" property="date" />
+    <result column="deviceId" jdbcType="INTEGER" property="deviceid" />
+    <result column="statu" jdbcType="VARCHAR" property="statu" />
+    <result column="Time" jdbcType="VARCHAR" property="time" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+  <insert id="insert" parameterType="com.example.leifeng.models.Deviceonlinehistory">
+    insert into DeviceOnlineHistory (id, date, deviceId,
+      statu, Time, type,
+      state)
+    values (#{id,jdbcType=INTEGER}, #{date,jdbcType=VARCHAR}, #{deviceid,jdbcType=INTEGER},
+      #{statu,jdbcType=VARCHAR}, #{time,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
+      #{state,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.leifeng.models.Deviceonlinehistory">
+    insert into DeviceOnlineHistory
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="date != null">
+        date,
+      </if>
+      <if test="deviceid != null">
+        deviceId,
+      </if>
+      <if test="statu != null">
+        statu,
+      </if>
+      <if test="time != null">
+        Time,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceid != null">
+        #{deviceid,jdbcType=INTEGER},
+      </if>
+      <if test="statu != null">
+        #{statu,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>
