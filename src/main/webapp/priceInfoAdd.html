@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>网点管理</title>
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all">
+    <script src="plugins/layui/layui.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+</head>
+<body>
+<div class="layui-col-sm6">
+    <form class="layui-form" action="" method="post"></br>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商户编码：</label>
+            <div class="layui-input-block">
+                <input type="text" name="shCode" id="shCode" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备类型：</label>
+            <div class="layui-input-block">
+                <input type="text" name="devType" id="devType" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属商户：</label>
+            <div class="layui-input-block">
+                <select name="shUserId"  id="shUserId" class="shUserId" lay-filter="noshUserId" lay-search="">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">网点名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="network" id="network" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">结束功率：</label>
+            <div class="layui-input-block">
+                <input type="text" name="finishMinPower" id="finishMinPower" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="40">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">小功率充电时间：</label>
+            <div class="layui-input-block">
+                <input type="text" name="fees250w" id="fees250w" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="150">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">中功率充电时间：</label>
+            <div class="layui-input-block">
+                <input type="text" name="fees350w" id="fees350w" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="120">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">大功率充电时间：</label>
+            <div class="layui-input-block">
+                <input type="text" name="fees600w" id="fees600w" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="60">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">DC充电时间：</label>
+            <div class="layui-input-block">
+                <input type="text" name="feesDc" id="feesDc" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="120">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">最大充电时间：</label>
+            <div class="layui-input-block">
+                <input type="text" name="maxChargeTime" id="maxChargeTime" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="720">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否禁用：</label>
+            <div class="layui-input-block">
+                <select name="canUse"  id="canUse" class="shUserId" lay-filter="" lay-search="">
+                    <option>请选择</option>
+                    <option value="">否</option>
+                    <option value="">是</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">普通用户扣费金额：</label>
+            <div class="layui-input-block">
+                <input type="text" name="paymoneyFenPertimeNotvip" id="paymoneyFenPertimeNotvip" required lay-verify="required" autocomplete="off"
+                       class="layui-input" placeholder="单位：分">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" >VIP用户扣费金额：</label>
+            <div class="layui-input-block">
+                <input type="text" name="paymoneyPertimeVip" id="paymoneyPertimeVip" required lay-verify="required" autocomplete="off"
+                       class="layui-input"  placeholder="单位：分">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">浮充时间：</label>
+            <div class="layui-input-block">
+                <input type="text" name="finishTime" id="finishTime" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="60">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">检查间隔时间：</label>
+            <div class="layui-input-block">
+                <input type="text" name="giveupTime" id="giveupTime" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="30">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">AC允许最大充电功率：</label>
+            <div class="layui-input-block">
+                <input type="text" name="overloadPower" id="overloadPower" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="650">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否为免费网点：</label>
+            <div class="layui-input-block">
+                <select name="freeCharge"  id="freeCharge" class="shUserId" lay-filter="" lay-search="">
+                    <option></option>
+                    <option value="">否</option>
+                    <option value="">是</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item" id="area-picker">
+            <div class="layui-form-label">网点地址：</div>
+            <div class="layui-input-inline" style="width: 100px;">
+                <select name="deviceProvinceAddress" class="province-selector" data-value="广东省" lay-filter="province-1">
+                    <option value="">请选择省</option>
+                </select>
+            </div>
+            <div class="layui-input-inline" style="width: 100px;">
+                <select name="deviceCityAddress" class="city-selector" data-value="深圳市" lay-filter="city-1">
+                    <option value="">请选择市</option>
+                </select>
+            </div>
+            <div class="layui-input-inline" style="width: 100px;">
+                <select name="deviceAreaAddress" class="county-selector" data-value="宝安区" lay-filter="county-1">
+                    <option value="">请选择区</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">详细地址：</label>
+            <div class="layui-input-block">
+                <input type="text" name="deviceDetailAddress" id="deviceDetailAddress" required lay-verify="required" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">DC最大充电时间：</label>
+            <div class="layui-input-block">
+                <input type="text" name="maxCahargeTimeDc" id="maxChargeTimeDc" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="600">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">小功率标准：</label>
+            <div class="layui-input-block">
+                <input type="text" name="power1250w" id="power1250w" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="150">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">中功率标准：</label>
+            <div class="layui-input-block">
+                <input type="text" name="power2350w" id="power2350w" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="280">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">大功率标准：</label>
+            <div class="layui-input-block">
+                <input type="text" name="power3600w" id="power3600w" required lay-verify="required" autocomplete="off"
+                       class="layui-input" value="500">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    //Demo
+    layui.use('form', function () {
+        var form = layui.form;
+        var index = parent.layer.getFrameIndex(window.name);
+        var $ = layui.jquery, layer = layui.layer;
+        var RshUserId = "雷风";
+
+
+
+        //点击添加网点按钮时发送get请求到以下路径查出商户列表
+        $.get("/lf/Deviceinfo/linkageShUserId?shUserId="+RshUserId, function (data) {
+            for (var i = 0; i < data.length; i++) {
+                var option = "<option value='" + data[i] + "'>" + data[i] + "</option>";
+                $("select[name=shUserId]").append(option);
+            }
+            layui.form.render('select', 'devFrom');
+            form.render('select');
+            return false;
+        });
+
+
+        form.on('submit(submit)', function(data){
+            $.ajax({
+                url: '/lf/priceInfo/insert',
+                type: "post",
+                contentType:'application/json',
+                data:JSON.stringify(data.field),
+                success: function(data) {
+                    parent.layer.alert("网点添加成功！",{icon:6},function () {
+                        parent.layer.closeAll();
+                        parent.location.reload();
+                    });
+                }
+            });
+            return false;
+        });
+    });
+
+
+    //配置省市区三级联动插件目录
+    layui.config({
+        base: './plugins/layui/',
+        version: '1.0'
+    });
+    //将省市区信息封装在layarea.js中
+    layui.use(['layer', 'form', 'layarea'], function () {
+        var layer = layui.layer
+            , form = layui.form
+            , layarea = layui.layarea;
+
+        layarea.render({
+            elem: '#area-picker',
+            change: function (res) {
+                console.log(res);
+            }
+        });
+    });
+</script>
+</body>
+</html>
