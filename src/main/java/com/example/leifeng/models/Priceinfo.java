@@ -1,57 +1,58 @@
 package com.example.leifeng.models;
+
 public class Priceinfo {
     private Integer id;
-//    网点id -自动生成
+
     private Integer shCode;
 
     private Integer devType;
 
     private String shUserId;
-//所属商户 -只能选择已存在商户
+
     private String network;
-//网点名称
+
     private Integer finishMinPower;
-//结束功率 -初始值40
+
     private Integer fees250w;
-//小功率充电时间 -初始值150
+
     private Integer fees350w;
-//中功率充电时间 -初始值120
+
     private Integer fees600w;
-//大功率充电时间 -初始值60
+
     private Integer feesDc;
-//DC充电时间  -初始值120
+
     private Integer maxChargeTime;
-//最大充电时间 -默认值720
+
     private Integer canUse;
-//是否禁用
+
     private Integer paymoneyFenPertimeNotvip;
-//普通用户扣费金额（分）
+
     private Integer paymoneyFenPertimeVip;
-//VIP用户扣费金额（分）
+
     private Integer finishTime;
-//浮充时间 -初始值60
+
     private Integer giveupTime;
-//检查间隔时间 -默认值30
+
     private Integer overloadPower;
-//AC最大允许充电功率 -默认值650
+
     private Integer freeCharge;
-//是否为免费网点 -初始值否
+
     private String deviceProvinceAddress;
-//省  -初始值 广东省
+
     private String deviceCityAddress;
-//市  -初始值 深圳市
+
     private String deviceAreaAddress;
-//区  -初始值 宝安区
+
     private String deviceDetailAddress;
-//详细地址
+
     private Integer maxChargeTimeDc;
-//DC最大充电时间 -默认值600
+
     private Integer power1250w;
-//小功率标准 -初始值150
+
     private Integer power2350w;
-//中功率标准 -初始值280
+
     private Integer power3600w;
-//大功率标准 -初始值500
+
     public Integer getId() {
         return id;
     }
