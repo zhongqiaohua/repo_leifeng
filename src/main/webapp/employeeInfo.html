@@ -23,14 +23,14 @@
 <script>
     layui.use('table', function(){
         var table = layui.table;
-
+        var RshUserID = '雷风';
         //第一个实例
         table.render({
             id:'allemployee'
             ,elem: '#idEmployee'
             ,checkbox: true
             // ,toolbar: '#toolbarDemo'
-            ,url: '/lf/Employee/selectAll' //数据接口
+            ,url: '/lf/Employee/selectAll?shUserID='+RshUserID //数据接口
             ,height: $(document).height() - $('#idEmployee').offset().top - 20
             ,page: true //开启分页
             ,limits: [10,20,30]
@@ -109,7 +109,7 @@
                             body.find("#employeeUserId").val(obj.data.employeeUserId);
                             body.find("#password").val(obj.data.password);
                             body.find("#employeePhone").val(obj.data.employeePhone);
-                            body.find("#employeeCompany").val(obj.data.employeeCompany);
+                            body.find("#employeeCompany").val(RshUserID);
                             body.find("#employeeOpenid").val(openid);
                             // layer.alert(JSON.stringify(obj.data));
                             // for (var i = 0; i < inputList.length; i++ ) {
@@ -143,22 +143,6 @@
             }
         });
 
-        // 监听工具条
-
-        // table.on('tool(employee)', function(obj){
-        //     var data = obj.data;
-        //     if(obj.event === 'detail'){
-        //         layer.msg('ID：'+ data.id + ' 的查看操作');
-        //     } else if(obj.event === 'del'){
-        //         layer.confirm('真的删除行么', function(index){
-        //             obj.del();
-        //             layer.close(index);
-        //         });
-        //     } else if(obj.event === 'edit'){
-        //         layer.alert('编辑行：<br>'+ JSON.stringify(data))
-        //     }
-        // });
-
         //头操作按钮事件处理
         $('.reload').on('click', function() {
             var employeeUserId = $('#employeeUserId');
@@ -180,7 +164,7 @@
             else{
                 //执行重载
                 table.reload('allemployee', {
-                    url:'/lf/Employee/selectAll',
+                    url:'/lf/Employee/selectAll?shUserID='+RshUserID,
                     page: {
                         curr: 1 //重新从第 1 页开始
                     },

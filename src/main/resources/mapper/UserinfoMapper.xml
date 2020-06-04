@@ -37,6 +37,13 @@
     sh_user_id_b, sh_payment_ratio_b, openid_state, withdraw_sms, withdraw_sms_time,
     password_sms, password_sms_time
   </sql>
+    <select id="operatingLevel" resultType="map">
+       SELECT id,sh_level,sh_user_id as name,sh_superior_dealer_0 as '0',sh_superior_dealer_1 as '1',sh_superior_dealer_2 as '2',sh_superior_dealer_3 as '3'
+		FROM UserInfo WHERE sh_user_id in(SELECT sh_user_id FROM UserInfo WHERE
+        sh_superior_dealer_0=#{param1} OR sh_superior_dealer_1=#{param1} OR sh_superior_dealer_2=#{param1} OR
+        sh_superior_dealer_3=#{param1} OR sh_user_id =#{param1}) ORDER BY sh_level
+    </select>
+
     <select id="examineUser" resultType="java.lang.Integer">
         SELECT COUNT (*) FROM UserInfo WHERE sh_user_id = #{param1}
     </select>

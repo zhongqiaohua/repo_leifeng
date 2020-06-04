@@ -54,27 +54,22 @@ public class EmployeeInfoController {
     /**
      *  page 为当前页
      *  limit  为当前页显示的条数
-     *  employeeUserId 所属商户
+     *  employeeUserId 员工名
+     *  employeeCompany 商户名
+     *  shUserID 当前登录商户
      */
     public Map<String,Object> selectAll(@RequestParam(required = false,defaultValue = "1") int page, @RequestParam(required = false,defaultValue = "5") int limit,
-                                        String employeeUserId,String employeeCompany){
-        return employeeInfoService.selectAll(page,limit,employeeUserId,employeeCompany);
+                                        String employeeUserId,String employeeCompany,String shUserID){
+        return employeeInfoService.selectAll(page,limit,employeeUserId,employeeCompany,shUserID);
     }
     @RequestMapping("/multiConditionSelect")
     /**
      *
      *  employeeUserId、employeeCompany两个条件模糊查询
+     *  shUserID 当前登录商户
      */
-    public Map<String,Object> multiConditionSelect(@RequestParam(required = false,defaultValue = "1") int page, @RequestParam(required = false,defaultValue = "5") int limit,
-                                        String employeeUserId,String employeeCompany){
-        return employeeInfoService.multiConditionSelect(page,limit,employeeUserId,employeeCompany);
-    }
-    @RequestMapping("/selectById")
-    /**
-     * 根据id查询
-     */
-    public Employeeinfo selectById(String id){
-        return employeeInfoService.selectById(id);
+    public Map<String,Object> multiConditionSelect(String employeeUserId,String employeeCompany){
+        return employeeInfoService.multiConditionSelect(employeeUserId,employeeCompany);
     }
     @RequestMapping("/delById")
     /**
