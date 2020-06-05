@@ -85,4 +85,12 @@ public class UserinfoController {
     public int addUser(String shUserIdUp,String shUserId,String shRealName,String shPhone,int shPaymentRatio){
          return userinfoService.addUser(shUserIdUp,shUserId,shRealName,shPhone,shPaymentRatio);
     }
+    @RequestMapping("/operatingLevel")
+    /**
+     * 添加或修改分红人
+     * shUserId  商户
+     */
+    public  List<Map<String,Object>> operatingLevel(String shUserId){
+        return userinfoService.operatingLevel(shUserId);
+    }
 }

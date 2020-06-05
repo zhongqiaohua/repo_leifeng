@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface UserinfoMapper {
+    List<Map<String,Object>> operatingLevel(String shUserID);
     List<Userinfo> selectAll(int page,int limit, String shUserID);
     List<Userinfo>  search(int page, int limit, String shUserId, String shRealName, String shPhone, String RshUserId);
     int countSearch( String shUserId, String shRealName, String shPhone, String RshUserId);

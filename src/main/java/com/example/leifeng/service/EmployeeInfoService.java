@@ -3,6 +3,7 @@ package com.example.leifeng.service;
 import com.alibaba.fastjson.JSONObject;
 import com.example.leifeng.dao.EmployeeinfoMapper;
 import com.example.leifeng.models.Employeeinfo;
+import com.example.leifeng.tools.LayuiFormatTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,8 @@ import java.util.Map;
 public class EmployeeInfoService   {
     @Autowired
     private EmployeeinfoMapper employee;
+    @Autowired
+    private LayuiFormatTool layuiFormatTool;
     public int insert(String employeeUserId,String employeePhone,String employeeCompany,String employeeLevel,String freeCharge) {
         String password = "987321";
         if (freeCharge.equals("on"))
@@ -41,25 +44,20 @@ public class EmployeeInfoService   {
         return employee.insertSelective(record);
     }
 
-    public Map<String,Object> selectAll(int page,int limit,String employeeUserId,String employeeCompany) {
+    public Map<String,Object> selectAll(int page,int limit,String employeeUserId,String employeeCompany,String shUserID) {
         if(employeeUserId == "")
             employeeUserId = null;
         if(employeeCompany == "")
             employeeCompany = null;
-        Map<String,Object> employeeMap = new LinkedHashMap<>();
-        int total = employee.count();
-        employeeMap.put("code","0");
-        employeeMap.put("msg","");
-        employeeMap.put("count",total);
-        Object json = JSONObject.toJSON(employee.selectAll(page-1,limit,employeeUserId,employeeCompany)) ;
-        employeeMap.put("data",json);
-        return employeeMap;
+        int total = employee.count(shUserID);
+        Object json = JSONObject.toJSON(employee.selectAll(page-1,limit,employeeUserId,employeeCompany,shUserID)) ;
+        return layuiFormatTool.transformMap(total,json);
     }
-    public Map<String,Object> multiConditionSelect(int page,int limit,String employeeUserId,String employeeCompany) {
+    public Map<String,Object> multiConditionSelect(String employeeUserId,String employeeCompany) {
         Map<String,Object> employeeMap = new LinkedHashMap<>();
         employeeMap.put("code","0");
         employeeMap.put("msg","");
-        Object json = JSONObject.toJSON(employee.multiConditionSelect(page-1,limit,employeeUserId,employeeCompany)) ;
+        Object json = JSONObject.toJSON(employee.multiConditionSelect(employeeUserId,employeeCompany)) ;
         employeeMap.put("data",json);
         return employeeMap;
     }

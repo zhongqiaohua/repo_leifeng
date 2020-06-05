@@ -1,297 +1,221 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-cn">
+
 <head>
-    <meta charset="utf-8">
-    <title>商家列表</title>
-    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all">
-    <style type="text/css">
-        .csbutton{
-            width:100px;
-            height: 25px;
-            background-color: #ffffff;
-        }
-        .line{
-            color: #40f74f;
-            border: 1px solid #43f722;
-            border-radius: 4em;
-        }
-        .off-line{
-            color: #545454;
-            border: 1px solid #e1e2e0;
-            border-radius: 4em;
-        }
-        .shLevel0{
-            color: #0810a8;
-            border: 1px solid #0810a8;
-            border-radius: 4em;
-        }
-        .shLevel1{
-            color: #1f28f9;
-            border: 1px solid #1f28f9;
-            border-radius: 4em;
-        }
-        .shLevel2{
-            color: #5753f9;
-            border: 1px solid #5753f9;
-            border-radius: 4em;
-        }
-        .shLevel3{
-            color: #6c88f9;
-            border: 1px solid #6c88f9;
-            border-radius: 4em;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./plugins/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="plugins/font-awesome/css/font-awesome.css" media="all">
+    <script src="./ECharts/js/echarts.min.js"></script>
+    <script src="plugins/layui/layui.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
 </head>
 <body>
-<div class="demoTable" style="margin: 5px;line-height: 50px;">
-    <div class="layui-inline">
-        <input class="layui-input" id="shUserId" autocomplete="off" placeholder="商户名">
-    </div>
-    <div class="layui-inline">
-        <input class="layui-input" id="shRealName" autocomplete="off" placeholder="负责人 ">
-    </div>
-    <div class="layui-inline">
-        <input class="layui-input" id="shPhone" autocomplete="off" placeholder="电话">
-    </div>
-    <button class="layui-btn addMerchant"  lay-filter="" lay-event="addMerchant">添加商家</button>
-    <button class="layui-btn reset"  lay-filter="" lay-event="reset">页面重置</button>
-</div>
-<table id="idDevice" lay-filter="device"></table>
-<script src="plugins/layui/layui.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
-<script>
-    layui.use('table', function () {
-        var table = layui.table, form = layui.form;
-        var $ = layui.jquery, layer = layui.layer;
-        var RshUserId = "雷风";
-        var index = layer.load(2);
-        //第一个实例
-        table.render({
-            id: 'allDevice'
-            , elem: '#idDevice'
-            , checkbox: true
-            ,loading: true //翻页加loading
-            // ,toolbar: '#toolbarDemo'
-            , url: '/lf/user/selall?shUserID='+RshUserId //数据接口
-            , height: $(document).height() - $('#idDevice').offset().top - 20
-            , page: true //开启分页
-            , limits: [10, 20, 30,50,100]
-            , limit: 20 //每页默认显示的数量
-            ,response:{//开启延迟加载栏
-                statusName: 'code',
-                msgName: 'msg' ,//状态信息的字段名称，默认：msg
-                countName: 'count', //数据总数的字段名称，默认：count
-                dataName: 'data' //数据列表的字段名称，默认：data
-            }
-            , cols: [[ //表头
-                {fixed: 'left', type: 'checkbox'}
-                , {field: 'shUserId', title: '商户名称', width: 130, fixed: 'left', sort: true}
-                , {field: 'shRealName', title: '负责人', width: 110, sort: true, align: 'center'}
-                , {field: 'shOpenid', title: '绑定微信', width: 120,templet: ShOpenid, align: 'center'}
-                , {field: 'shPhone', title: '联系电话', width: 150}
-                , {field: 'shLevel', title: '运营等级', width: 120, sort: true, templet: Online, align: 'center'}
-                , {field: 'shSuperiorDealer0', title: '总代理', width: 100, sort: true, align: 'center'}
-                , {field: 'shSuperiorDealer1', title: '一级代理', width: 120, sort: true}
-                , {field: 'shSuperiorDealer2', title: '二级代理', width: 120, }
-                , {field: 'shSuperiorDealer3', title: '三级代理', width: 120,}
-                , {field: 'shPaymentRatio', title: '所占比例', width: 120, align: 'center'}
-                , {field: 'shUserIdA', title: 'A分红', width: 120}
-                , {field: 'shPaymentRatioA', title: '分红比例', width: 120,align: 'center'}
-                , {field: 'shUserIdB', title: 'B分红', width: 120}
-                , {field: 'shPaymentRatioB', title: '分红比例', width: 120,align: 'center'}
-                , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 170, align: 'center'}
-            ]],
-            done: function (res) {
-                // pageCurr = curr;
-                layer.close(index);
-            }
+<div id="main2" style="width: 100%;height:100vh;"></div>
 
-        });
+<script type="text/javascript">
+    var RshUserId = "雷风";
+    var data = null;
+    var myChart = echarts.init(document.getElementById('main2'));
 
-        function Online(data) {
-            var shLevel = data.shLevel;
-            var btns = "";
-            if (shLevel === 0) {
-                btns += '<button type="button" class="csbutton shLevel0" > 总代理 </button>';
-            }
-            else if (shLevel === 1) {
-                btns += '<button type="button" class="csbutton shLevel1">一级代理</button>';
-            }
-            else if (shLevel === 2) {
-                btns += '<button type="button" class="csbutton shLevel2">二级代理</button>';
-            }
-            else {
-                btns += '<button type="button" class="csbutton shLevel3">三级代理</button>';
-            }
-            return btns;
-        }
-        function ShOpenid(data) {
-            var shOpenid = data.shOpenid;
-            var btns = "";
-            if(shOpenid === '' || shOpenid === null || shOpenid === undefined){
-                btns += '<button type="button" class="csbutton off-line" > 未绑定 </button>';
-            }
-            else{
-                btns += '<button type="button" class="csbutton line" > 已绑定 </button>';
-            }
-            return btns;
-        }
-         //工具条
-        table.on('tool(device)', function (obj) {
-            switch (obj.event) {
-                case 'edit':
-                    var index = layer.open({
-                        type: 2,
-                        title: "编辑商家",
-                        area: ['20%', '30%'],
-                        fix: false,
-                        maxmin: true,
-                        shadeClose: true,
-                        shade: 0.4,
-                        content: 'merchantEdit.html?id=1',
-                        success: function (layero, index) {
-                            var body = layer.getChildFrame('body', index);
-                            body.find("#shUserId").val(obj.data.shUserId);
-                            body.find("#shRealName").val(obj.data.shRealName);
-                            body.find("#shPhone").val(obj.data.shPhone);
-                        },
-                        end: function () {
-                            location = window.location;//刷新
-                            layer.msg('操作成功');
+    // var data = {
+    //     "name": "flare",
+    //     "children": [
+    //         {
+    //             "name": "data",
+    //             "children": [
+    //                 {
+    //                     "name": "converters",
+    //                     "children": [
+    //                         {"name": "Converters", "value": 721},
+    //                         {"name": "DelimitedTextConverter", "value": 4294}
+    //                     ]
+    //                 },
+    //                 {
+    //                     "name": "DataUtil",
+    //                     "value": 3322
+    //                 }
+    //             ]
+    //         },
+    //         {
+    //             "name": "display",
+    //             "children": [
+    //                 {"name": "DirtySprite", "value": 8833},
+    //                 {"name": "LineSprite", "value": 1732},
+    //                 {"name": "RectSprite", "value": 3623}
+    //             ]
+    //         },
+    //         {
+    //             "name": "flex",
+    //             "children": [
+    //                 {"name": "FlareVis", "value": 4116}
+    //             ]
+    //         },
+    //         {
+    //             "name": "query",
+    //             "children": [
+    //                 {"name": "AggregateExpression", "value": 1616},
+    //                 {"name": "And", "value": 1027},
+    //                 {"name": "Arithmetic", "value": 3891},
+    //                 {"name": "Average", "value": 891},
+    //                 {"name": "BinaryExpression", "value": 2893},
+    //                 {"name": "Comparison", "value": 5103},
+    //                 {"name": "CompositeExpression", "value": 3677},
+    //                 {"name": "Count", "value": 781},
+    //                 {"name": "DateUtil", "value": 4141},
+    //                 {"name": "Distinct", "value": 933},
+    //                 {"name": "Expression", "value": 5130},
+    //                 {"name": "ExpressionIterator", "value": 3617},
+    //                 {"name": "Fn", "value": 3240},
+    //                 {"name": "If", "value": 2732},
+    //                 {"name": "IsA", "value": 2039},
+    //                 {"name": "Literal", "value": 1214},
+    //                 {"name": "Match", "value": 3748},
+    //                 {"name": "Maximum", "value": 843},
+    //                 {
+    //                     "name": "methods",
+    //                     "children": [
+    //                         {"name": "add", "value": 593},
+    //                         {"name": "and", "value": 330},
+    //                         {"name": "average", "value": 287},
+    //                         {"name": "count", "value": 277},
+    //                         {"name": "distinct", "value": 292},
+    //                         {"name": "div", "value": 595},
+    //                         {"name": "eq", "value": 594},
+    //                         {"name": "fn", "value": 460},
+    //                         {"name": "gt", "value": 603},
+    //                         {"name": "gte", "value": 625},
+    //                         {"name": "iff", "value": 748},
+    //                         {"name": "isa", "value": 461},
+    //                         {"name": "lt", "value": 597},
+    //                         {"name": "lte", "value": 619},
+    //                         {"name": "max", "value": 283},
+    //                         {"name": "min", "value": 283},
+    //                         {"name": "mod", "value": 591},
+    //                         {"name": "mul", "value": 603},
+    //                         {"name": "neq", "value": 599},
+    //                         {"name": "not", "value": 386},
+    //                         {"name": "or", "value": 323},
+    //                         {"name": "orderby", "value": 307},
+    //                         {"name": "range", "value": 772},
+    //                         {"name": "select", "value": 296},
+    //                         {"name": "stddev", "value": 363},
+    //                         {"name": "sub", "value": 600},
+    //                         {"name": "sum", "value": 280},
+    //                         {"name": "update", "value": 307},
+    //                         {"name": "variance", "value": 335},
+    //                         {"name": "where", "value": 299},
+    //                         {"name": "xor", "value": 354},
+    //                         {"name": "x_x", "value": 264}
+    //                     ]
+    //                 },
+    //                 {"name": "Minimum", "value": 843},
+    //                 {"name": "Not", "value": 1554},
+    //                 {"name": "Or", "value": 970},
+    //                 {"name": "Query", "value": 13896},
+    //                 {"name": "Range", "value": 1594},
+    //                 {"name": "StringUtil", "value": 4130},
+    //                 {"name": "Sum", "value": 791},
+    //                 {"name": "Variable", "value": 1124},
+    //                 {"name": "Variance", "value": 1876},
+    //                 {"name": "Xor", "value": 1101}
+    //             ]
+    //         },
+    //         {
+    //             "name": "scale",
+    //             "children": [
+    //                 {"name": "IScaleMap", "value": 2105},
+    //                 {"name": "LinearScale", "value": 1316},
+    //                 {"name": "LogScale", "value": 3151},
+    //                 {"name": "OrdinalScale", "value": 3770},
+    //                 {"name": "QuantileScale", "value": 2435},
+    //                 {"name": "QuantitativeScale", "value": 4839},
+    //                 {"name": "RootScale", "value": 1756},
+    //                 {"name": "Scale", "value": 4268},
+    //                 {"name": "ScaleType", "value": 1821},
+    //                 {"name": "TimeScale", "value": 5833}
+    //             ]
+    //         }
+    //     ]
+    // };
+    // $.get("/lf/user/test?shUserId="+RshUserId, function (data) {
+    //     var rdata = [], hash = {},children = children, len = data.length;
+    //     var level_n = data.get(0).level-1;//当前商户运营等级
+    //     for(var i=0;i<len;i++)
+    //     {
+    //             if(level_n === 3){//当前商户是三级运营商
+    //                 break;
+    //             }
+    //             else{
+    //
+    //             }
+    //     }
+    //      alert(data);
+    // });.
+    $.get("/lf/user/operatingLevel?shUserId="+RshUserId, function (data1) {
+        var jsonData = eval(data1);
+        data = transData(jsonData, 'id', 'pid', 'children');
+        var option = {
+            tooltip: {
+                trigger: 'item',
+                triggerOn: 'mousemove'
+            },
+            series:[
+                {
+                    type: 'tree',
+
+                    data: [data],
+
+                    top: '1%',
+                    left: '7%',
+                    bottom: '1%',
+                    right: '20%',
+
+                    symbolSize: 10,
+
+                    label: {
+                        position: 'left',
+                        verticalAlign: 'middle',
+                        align: 'right',
+                        fontSize: 10
+                    },
+
+                    leaves: {
+                        label: {
+                            position: 'right',
+                            verticalAlign: 'middle',
+                            align: 'left'
                         }
-                    });
-                    break;
-                case 'del':
-                    var index = layer.open({
-                        type: 2,
-                        title: "设置分红",
-                        area: ['20%', '50%'],
-                        fix: false,
-                        maxmin: true,
-                        shadeClose: true,
-                        shade: 0.4,
-                        content: 'merchantDividend.html?id=1',
-                        success: function (layero, index) {
-                            var body = layer.getChildFrame('body', index);
-                            body.find("#shUserId").val(obj.data.shUserId);
-                            body.find("#shPaymentRatio0").val(100-obj.data.shPaymentRatioA-obj.data.shPaymentRatioB);
-                            body.find("#shUserIdA").val(obj.data.shUserIdA);
-                            body.find("#shPaymentRatioA").val(obj.data.shPaymentRatioA);
-                            body.find("#shUserIdB").val(obj.data.shUserIdB);
-                            body.find("#shPaymentRatioB").val(obj.data.shPaymentRatioB);
-                        },
-                        end: function () {
-                            location = window.location;//刷新
-                            layer.msg('操作成功');
-                        }
-                    });
-                    break;
-            }
-        });
+                    },
 
-
-        // 监听条件变化
-        var map = new Map();
-        $("#shUserId").bind('input porpertychange', function () {
-            $('#shPhone').val("");//失去焦点后将值清空
-            $('#shRealName').val("");
-            var shUserId = $('#shUserId').val();
-            map.set('shUserId', shUserId);
-            search(map);
-        });
-        $("#shRealName").bind('input porpertychange', function () {
-            $('#shUserId').val("");//失去焦点后将值清空
-            $('#shPhone').val("");
-            var shRealName = $('#shRealName').val();
-            map.set('shRealName', shRealName);
-            search(map);
-        });
-        $("#shPhone").bind('input porpertychange', function () {
-            $('#shUserId').val("");//失去焦点后将值清空
-            $('#shRealName').val("");
-            var shPhone = $('#shPhone').val();
-            map.set('shPhone', shPhone);
-            search(map);
-        });
-        //单条件搜索
-        function search(date) {
-            //查看传入的值是哪个条件  ;
-            var shUserId = null, shRealName = null, shPhone = null;
-            if (date.has("shUserId")) {
-                shUserId = date.get("shUserId");
-                date.delete("shUserId");
-            }
-
-            if (date.has("shRealName")) {
-                shRealName = date.get("shRealName");
-                date.delete("shRealName");
-            }
-
-            if (date.has("shPhone")) {
-                shPhone = date.get("shPhone");
-                date.delete("shPhone");
-            }
-            // alert(shUserId+" "+shRealName+" "+shPhone);
-            table.reload('allDevice', {
-                url: '/lf/user/search',
-                page: {
-                    curr: 1 //重新从第 1 页开始
-                },
-                response:{//开启延迟加载栏
-                    statusName: 'code',
-                    msgName: 'msg' ,//状态信息的字段名称，默认：msg
-                    countName: 'count', //数据总数的字段名称，默认：count
-                    dataName: 'data' //数据列表的字段名称，默认：data
-                },
-                where: {
-                    shUserId: shUserId,
-                    shRealName: shRealName,
-                    shPhone: shPhone,
-                    RshUserId:RshUserId
+                    expandAndCollapse: false,
+                    animationDuration: 550,
+                    animationDurationUpdate: 750
                 }
-
-            }, 'data');
-        }
-
-        $('.addMerchant').on('click', function () {
-            var index = layer.open({
-                type: 2,
-                title: "添加商户",
-                area: ['20%', '50%'],
-                fix: false,
-                maxmin: true,
-                shadeClose: true,
-                shade: 0.4,
-                content: 'merchantADD.html?id=1',
-                success: function (layero, index) {
-                    var body = layer.getChildFrame('body', index);
-                    body.find("#shUserIdUp").val(RshUserId);
-                },
-                end: function () {
-                    layer.msg('操作成功');
-                    // location = window.location;//刷新
-                }
-            });
-        });
-        $('.reset').on('click', function () {
-            location = window.location;//
-        });
+            ]
+        };
+        myChart.setOption(option);
     });
-</script>
-<script>
+    function transData(a, idStr, pidStr, chindrenStr){
+        var r = [], hash = {}, id = idStr, pid = pidStr, children = chindrenStr, i = 0, j = 0, len = a.length;
+        for(; i < len; i++){
+            hash[a[i][id]] = a[i];
+        }
+        for(; j < len; j++){
+            var aVal = a[j], hashVP = hash[aVal[pid]];
+            if(hashVP){
+                !hashVP[children] && (hashVP[children] = []);
+                hashVP[children].push(aVal);
+            }else{
+                r.push(aVal);
+            }
+        }
+        return r[0];
+    }
 
 </script>
-
-<!--工作模板-->
-<!--<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>-->
-<script type="employeeInfo/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="del">添加分红</a>
-
-
-
-
-</script>
-
 </body>
+
 </html>

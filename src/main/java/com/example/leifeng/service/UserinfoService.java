@@ -2,6 +2,7 @@ package com.example.leifeng.service;
 
 import com.example.leifeng.dao.UserinfoMapper;
 import com.example.leifeng.models.Userinfo;
+import com.example.leifeng.tools.LayuiFormatTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONObject;
@@ -20,15 +21,12 @@ import java.util.Map;
 public class UserinfoService {
     @Autowired
     private UserinfoMapper userinfoMapper;
+    @Autowired
+    LayuiFormatTool layuiFormatTool;
     public Map<String,Object> selectAll(int page,int limit, String shUserID){
-        Map<String,Object> userMap = new HashMap<>();
         int total = userinfoMapper.countAll(shUserID);
-        userMap.put("code","0");
-        userMap.put("msg","");
-        userMap.put("count",total);
         Object json = JSONObject.toJSON(userinfoMapper.selectAll(page-1,limit,shUserID)) ;
-        userMap.put("data",json);
-        return userMap;
+        return layuiFormatTool.transformMap(total,json);
     }
     public Map<String,Object> search(int page, int limit,String shUserId,String shRealName,String shPhone,String RshUserId){
         if(shUserId == "")
@@ -37,14 +35,9 @@ public class UserinfoService {
             shRealName = null;
         if(shPhone == "")
             shPhone = null;
-        Map<String,Object> userMap = new HashMap<>();
         int total = userinfoMapper.countSearch(shUserId,shRealName,shPhone,RshUserId);
-        userMap.put("code","0");
-        userMap.put("msg","");
-        userMap.put("count",total);
         Object json = JSONObject.toJSON(userinfoMapper.search(page-1,limit,shUserId,shRealName,shPhone,RshUserId)) ;
-        userMap.put("data",json);
-        return userMap;
+        return layuiFormatTool.transformMap(total,json);
     }
     public int updateMerchant(String shUserID,String shRealName,String shPhone){
 //        System.out.println(shUserID+ " " +shRealName + " " +shPhone);
@@ -95,5 +88,8 @@ public class UserinfoService {
         userinfo.setShPaymentRatio(shPaymentRatio);
         System.out.println(userinfo.toString());
         return userinfoMapper.insert(userinfo);
+    }
+    public List<Map<String,Object>> operatingLevel(String shUserId){
+        return layuiFormatTool.operatingLevelToos(userinfoMapper.operatingLevel(shUserId));
     }
 }

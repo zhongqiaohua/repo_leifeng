@@ -26,6 +26,15 @@
   <!---->
   <select id="count"  resultType="int">
     SELECT COUNT(*) FROM EmployeeInfo
+    WHERE employee_company IN (SELECT sh_user_id FROM UserInfo WHERE
+    sh_superior_dealer_0=#{param3} OR sh_superior_dealer_1=#{param3} OR sh_superior_dealer_2=#{param3} OR
+    sh_superior_dealer_3=#{param3} OR sh_user_id=#{param3})
+    <if test="param1 != null" >
+      AND employee_user_id like CONCAT('%',#{param1},'%')
+    </if>
+    <if test="param2 != null" >
+      AND employee_company like CONCAT('%',#{param2},'%')
+    </if>
   </select>
   <!---->
   <select id="selectAll"  resultMap="BaseResultMap">
@@ -40,11 +49,14 @@
           ,sms
           ,sms_time
       FROM EmployeeInfo
+    WHERE employee_company IN (SELECT sh_user_id FROM UserInfo WHERE
+    sh_superior_dealer_0=#{param5} OR sh_superior_dealer_1=#{param5} OR sh_superior_dealer_2=#{param5} OR
+    sh_superior_dealer_3=#{param5} OR sh_user_id=#{param5})
       <if test="param3 != null" >
-        <where>employee_user_id like CONCAT('%',#{param3},'%')</where>
+        AND employee_user_id like CONCAT('%',#{param3},'%')
       </if>
       <if test="param4 != null" >
-        <where>employee_company like CONCAT('%',#{param4},'%')</where>
+        AND employee_company like CONCAT('%',#{param4},'%')
       </if>
       <if test="param3 == null and param4 == null">
         ORDER BY id   offset #{param2}*#{param1} rows fetch next #{param2} rows only
@@ -63,7 +75,7 @@
           ,sms
           ,sms_time
       FROM EmployeeInfo
-      WHERE employee_user_id like CONCAT('%',#{param3},'%') AND employee_company like CONCAT('%',#{param4},'%')
+      WHERE employee_user_id like CONCAT('%',#{param1},'%') AND employee_company like CONCAT('%',#{param2},'%')
   </select>
   <!---->
   <select id="selectById" parameterType="int" resultMap="BaseResultMap">
