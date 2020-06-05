@@ -1,17 +1,10 @@
 package com.example.leifeng.dao;
 
-import com.example.leifeng.models.Payorder;
+
+import java.util.List;
+import java.util.Map;
 
 public interface PayorderMapper {
-    int deleteByPrimaryKey(Integer id);
-
-    int insert(Payorder record);
-
-    int insertSelective(Payorder record);
-
-//    Payorder selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(Payorder record);
-
-    int updateByPrimaryKey(Payorder record);
+    List<Map<String,Object>> selectAll(int page,int limit,String shUserId);
+    int countAll(String shUserId);
 }
