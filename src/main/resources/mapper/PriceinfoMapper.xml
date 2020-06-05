@@ -1,217 +1,428 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.leifeng.dao.PriceinfoMapper">
-  <resultMap id="BaseResultMap" type="com.example.leifeng.models.Priceinfo">
-    <result column="id" jdbcType="INTEGER" property="id" />
-    <result column="sh_code" jdbcType="INTEGER" property="shCode" />
-    <result column="dev_type" jdbcType="INTEGER" property="devType" />
-    <result column="sh_user_id" jdbcType="VARCHAR" property="shUserId" />
-    <result column="network" jdbcType="VARCHAR" property="network" />
-    <result column="finish_min_power" jdbcType="INTEGER" property="finishMinPower" />
-    <result column="fees_250W" jdbcType="INTEGER" property="fees250w" />
-    <result column="fees_350W" jdbcType="INTEGER" property="fees350w" />
-    <result column="fees_600W" jdbcType="INTEGER" property="fees600w" />
-    <result column="fees_dc" jdbcType="INTEGER" property="feesDc" />
-    <result column="max_charge_time" jdbcType="INTEGER" property="maxChargeTime" />
-    <result column="can_use" jdbcType="INTEGER" property="canUse" />
-    <result column="paymoney_fen_pertime_notvip" jdbcType="INTEGER" property="paymoneyFenPertimeNotvip" />
-    <result column="paymoney_fen_pertime_vip" jdbcType="INTEGER" property="paymoneyFenPertimeVip" />
-    <result column="finish_time" jdbcType="INTEGER" property="finishTime" />
-    <result column="giveup_time" jdbcType="INTEGER" property="giveupTime" />
-    <result column="overload_power" jdbcType="INTEGER" property="overloadPower" />
-    <result column="free_charge" jdbcType="INTEGER" property="freeCharge" />
-    <result column="device_province_address" jdbcType="VARCHAR" property="deviceProvinceAddress" />
-    <result column="device_city_address" jdbcType="VARCHAR" property="deviceCityAddress" />
-    <result column="device_area_address" jdbcType="VARCHAR" property="deviceAreaAddress" />
-    <result column="device_detail_address" jdbcType="VARCHAR" property="deviceDetailAddress" />
-    <result column="max_charge_time_dc" jdbcType="INTEGER" property="maxChargeTimeDc" />
-    <result column="power1_250W" jdbcType="INTEGER" property="power1250w" />
-    <result column="power2_350W" jdbcType="INTEGER" property="power2350w" />
-    <result column="power3_600W" jdbcType="INTEGER" property="power3600w" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.leifeng.dao.PriceinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.example.leifeng.models.Priceinfo" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="sh_code" property="shCode" jdbcType="INTEGER" />
+    <result column="dev_type" property="devType" jdbcType="INTEGER" />
+    <result column="sh_user_id" property="shUserId" jdbcType="VARCHAR" />
+    <result column="network" property="network" jdbcType="VARCHAR" />
+    <result column="finish_min_power" property="finishMinPower" jdbcType="INTEGER" />
+    <result column="fees_250W" property="fees250w" jdbcType="INTEGER" />
+    <result column="fees_350W" property="fees350w" jdbcType="INTEGER" />
+    <result column="fees_600W" property="fees600w" jdbcType="INTEGER" />
+    <result column="fees_dc" property="feesDc" jdbcType="INTEGER" />
+    <result column="max_charge_time" property="maxChargeTime" jdbcType="INTEGER" />
+    <result column="can_use" property="canUse" jdbcType="INTEGER" />
+    <result column="paymoney_fen_pertime_notvip" property="paymoneyFenPertimeNotvip" jdbcType="INTEGER" />
+    <result column="paymoney_fen_pertime_vip" property="paymoneyFenPertimeVip" jdbcType="INTEGER" />
+    <result column="finish_time" property="finishTime" jdbcType="INTEGER" />
+    <result column="giveup_time" property="giveupTime" jdbcType="INTEGER" />
+    <result column="overload_power" property="overloadPower" jdbcType="INTEGER" />
+    <result column="free_charge" property="freeCharge" jdbcType="INTEGER" />
+    <result column="device_province_address" property="deviceProvinceAddress" jdbcType="VARCHAR" />
+    <result column="device_city_address" property="deviceCityAddress" jdbcType="VARCHAR" />
+    <result column="device_area_address" property="deviceAreaAddress" jdbcType="VARCHAR" />
+    <result column="device_detail_address" property="deviceDetailAddress" jdbcType="VARCHAR" />
+    <result column="max_charge_time_dc" property="maxChargeTimeDc" jdbcType="INTEGER" />
+    <result column="power1_250W" property="power1250w" jdbcType="INTEGER" />
+    <result column="power2_350W" property="power2350w" jdbcType="INTEGER" />
+    <result column="power3_600W" property="power3600w" jdbcType="INTEGER" />
   </resultMap>
-  <insert id="insert" parameterType="com.example.leifeng.models.Priceinfo">
-    insert into PriceInfo (id, sh_code, dev_type,
-      sh_user_id, network, finish_min_power,
-      fees_250W, fees_350W, fees_600W,
-      fees_dc, max_charge_time, can_use,
-      paymoney_fen_pertime_notvip, paymoney_fen_pertime_vip,
-      finish_time, giveup_time, overload_power,
-      free_charge, device_province_address, device_city_address,
-      device_area_address, device_detail_address,
-      max_charge_time_dc, power1_250W, power2_350W,
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, sh_code, dev_type, sh_user_id, network, finish_min_power, fees_250W, fees_350W, 
+    fees_600W, fees_dc, max_charge_time, can_use, paymoney_fen_pertime_notvip, paymoney_fen_pertime_vip, 
+    finish_time, giveup_time, overload_power, free_charge, device_province_address, device_city_address, 
+    device_area_address, device_detail_address, max_charge_time_dc, power1_250W, power2_350W, 
+    power3_600W
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.example.leifeng.models.PriceinfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PriceInfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.example.leifeng.models.PriceinfoExample" >
+    delete from PriceInfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.example.leifeng.models.Priceinfo" >
+    insert into PriceInfo (id, sh_code, dev_type, 
+      sh_user_id, network, finish_min_power, 
+      fees_250W, fees_350W, fees_600W, 
+      fees_dc, max_charge_time, can_use, 
+      paymoney_fen_pertime_notvip, paymoney_fen_pertime_vip, 
+      finish_time, giveup_time, overload_power, 
+      free_charge, device_province_address, device_city_address, 
+      device_area_address, device_detail_address, 
+      max_charge_time_dc, power1_250W, power2_350W, 
       power3_600W)
-    values (#{id,jdbcType=INTEGER}, #{shCode,jdbcType=INTEGER}, #{devType,jdbcType=INTEGER},
-      #{shUserId,jdbcType=VARCHAR}, #{network,jdbcType=VARCHAR}, #{finishMinPower,jdbcType=INTEGER},
-      #{fees250w,jdbcType=INTEGER}, #{fees350w,jdbcType=INTEGER}, #{fees600w,jdbcType=INTEGER},
-      #{feesDc,jdbcType=INTEGER}, #{maxChargeTime,jdbcType=INTEGER}, #{canUse,jdbcType=INTEGER},
-      #{paymoneyFenPertimeNotvip,jdbcType=INTEGER}, #{paymoneyFenPertimeVip,jdbcType=INTEGER},
-      #{finishTime,jdbcType=INTEGER}, #{giveupTime,jdbcType=INTEGER}, #{overloadPower,jdbcType=INTEGER},
-      #{freeCharge,jdbcType=INTEGER}, #{deviceProvinceAddress,jdbcType=VARCHAR}, #{deviceCityAddress,jdbcType=VARCHAR},
-      #{deviceAreaAddress,jdbcType=VARCHAR}, #{deviceDetailAddress,jdbcType=VARCHAR},
-      #{maxChargeTimeDc,jdbcType=INTEGER}, #{power1250w,jdbcType=INTEGER}, #{power2350w,jdbcType=INTEGER},
+    values (#{id,jdbcType=INTEGER}, #{shCode,jdbcType=INTEGER}, #{devType,jdbcType=INTEGER}, 
+      #{shUserId,jdbcType=VARCHAR}, #{network,jdbcType=VARCHAR}, #{finishMinPower,jdbcType=INTEGER}, 
+      #{fees250w,jdbcType=INTEGER}, #{fees350w,jdbcType=INTEGER}, #{fees600w,jdbcType=INTEGER}, 
+      #{feesDc,jdbcType=INTEGER}, #{maxChargeTime,jdbcType=INTEGER}, #{canUse,jdbcType=INTEGER}, 
+      #{paymoneyFenPertimeNotvip,jdbcType=INTEGER}, #{paymoneyFenPertimeVip,jdbcType=INTEGER}, 
+      #{finishTime,jdbcType=INTEGER}, #{giveupTime,jdbcType=INTEGER}, #{overloadPower,jdbcType=INTEGER}, 
+      #{freeCharge,jdbcType=INTEGER}, #{deviceProvinceAddress,jdbcType=VARCHAR}, #{deviceCityAddress,jdbcType=VARCHAR}, 
+      #{deviceAreaAddress,jdbcType=VARCHAR}, #{deviceDetailAddress,jdbcType=VARCHAR}, 
+      #{maxChargeTimeDc,jdbcType=INTEGER}, #{power1250w,jdbcType=INTEGER}, #{power2350w,jdbcType=INTEGER}, 
       #{power3600w,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.example.leifeng.models.Priceinfo">
+  <insert id="insertSelective" parameterType="com.example.leifeng.models.Priceinfo" >
     insert into PriceInfo
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         id,
       </if>
-      <if test="shCode != null">
+      <if test="shCode != null" >
         sh_code,
       </if>
-      <if test="devType != null">
+      <if test="devType != null" >
         dev_type,
       </if>
-      <if test="shUserId != null">
+      <if test="shUserId != null" >
         sh_user_id,
       </if>
-      <if test="network != null">
+      <if test="network != null" >
         network,
       </if>
-      <if test="finishMinPower != null">
+      <if test="finishMinPower != null" >
         finish_min_power,
       </if>
-      <if test="fees250w != null">
+      <if test="fees250w != null" >
         fees_250W,
       </if>
-      <if test="fees350w != null">
+      <if test="fees350w != null" >
         fees_350W,
       </if>
-      <if test="fees600w != null">
+      <if test="fees600w != null" >
         fees_600W,
       </if>
-      <if test="feesDc != null">
+      <if test="feesDc != null" >
         fees_dc,
       </if>
-      <if test="maxChargeTime != null">
+      <if test="maxChargeTime != null" >
         max_charge_time,
       </if>
-      <if test="canUse != null">
+      <if test="canUse != null" >
         can_use,
       </if>
-      <if test="paymoneyFenPertimeNotvip != null">
+      <if test="paymoneyFenPertimeNotvip != null" >
         paymoney_fen_pertime_notvip,
       </if>
-      <if test="paymoneyFenPertimeVip != null">
+      <if test="paymoneyFenPertimeVip != null" >
         paymoney_fen_pertime_vip,
       </if>
-      <if test="finishTime != null">
+      <if test="finishTime != null" >
         finish_time,
       </if>
-      <if test="giveupTime != null">
+      <if test="giveupTime != null" >
         giveup_time,
       </if>
-      <if test="overloadPower != null">
+      <if test="overloadPower != null" >
         overload_power,
       </if>
-      <if test="freeCharge != null">
+      <if test="freeCharge != null" >
         free_charge,
       </if>
-      <if test="deviceProvinceAddress != null">
+      <if test="deviceProvinceAddress != null" >
         device_province_address,
       </if>
-      <if test="deviceCityAddress != null">
+      <if test="deviceCityAddress != null" >
         device_city_address,
       </if>
-      <if test="deviceAreaAddress != null">
+      <if test="deviceAreaAddress != null" >
         device_area_address,
       </if>
-      <if test="deviceDetailAddress != null">
+      <if test="deviceDetailAddress != null" >
         device_detail_address,
       </if>
-      <if test="maxChargeTimeDc != null">
+      <if test="maxChargeTimeDc != null" >
         max_charge_time_dc,
       </if>
-      <if test="power1250w != null">
+      <if test="power1250w != null" >
         power1_250W,
       </if>
-      <if test="power2350w != null">
+      <if test="power2350w != null" >
         power2_350W,
       </if>
-      <if test="power3600w != null">
+      <if test="power3600w != null" >
         power3_600W,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="shCode != null">
+      <if test="shCode != null" >
         #{shCode,jdbcType=INTEGER},
       </if>
-      <if test="devType != null">
+      <if test="devType != null" >
         #{devType,jdbcType=INTEGER},
       </if>
-      <if test="shUserId != null">
+      <if test="shUserId != null" >
         #{shUserId,jdbcType=VARCHAR},
       </if>
-      <if test="network != null">
+      <if test="network != null" >
         #{network,jdbcType=VARCHAR},
       </if>
-      <if test="finishMinPower != null">
+      <if test="finishMinPower != null" >
         #{finishMinPower,jdbcType=INTEGER},
       </if>
-      <if test="fees250w != null">
+      <if test="fees250w != null" >
         #{fees250w,jdbcType=INTEGER},
       </if>
-      <if test="fees350w != null">
+      <if test="fees350w != null" >
         #{fees350w,jdbcType=INTEGER},
       </if>
-      <if test="fees600w != null">
+      <if test="fees600w != null" >
         #{fees600w,jdbcType=INTEGER},
       </if>
-      <if test="feesDc != null">
+      <if test="feesDc != null" >
         #{feesDc,jdbcType=INTEGER},
       </if>
-      <if test="maxChargeTime != null">
+      <if test="maxChargeTime != null" >
         #{maxChargeTime,jdbcType=INTEGER},
       </if>
-      <if test="canUse != null">
+      <if test="canUse != null" >
         #{canUse,jdbcType=INTEGER},
       </if>
-      <if test="paymoneyFenPertimeNotvip != null">
+      <if test="paymoneyFenPertimeNotvip != null" >
         #{paymoneyFenPertimeNotvip,jdbcType=INTEGER},
       </if>
-      <if test="paymoneyFenPertimeVip != null">
+      <if test="paymoneyFenPertimeVip != null" >
         #{paymoneyFenPertimeVip,jdbcType=INTEGER},
       </if>
-      <if test="finishTime != null">
+      <if test="finishTime != null" >
         #{finishTime,jdbcType=INTEGER},
       </if>
-      <if test="giveupTime != null">
+      <if test="giveupTime != null" >
         #{giveupTime,jdbcType=INTEGER},
       </if>
-      <if test="overloadPower != null">
+      <if test="overloadPower != null" >
         #{overloadPower,jdbcType=INTEGER},
       </if>
-      <if test="freeCharge != null">
+      <if test="freeCharge != null" >
         #{freeCharge,jdbcType=INTEGER},
       </if>
-      <if test="deviceProvinceAddress != null">
+      <if test="deviceProvinceAddress != null" >
         #{deviceProvinceAddress,jdbcType=VARCHAR},
       </if>
-      <if test="deviceCityAddress != null">
+      <if test="deviceCityAddress != null" >
         #{deviceCityAddress,jdbcType=VARCHAR},
       </if>
-      <if test="deviceAreaAddress != null">
+      <if test="deviceAreaAddress != null" >
         #{deviceAreaAddress,jdbcType=VARCHAR},
       </if>
-      <if test="deviceDetailAddress != null">
+      <if test="deviceDetailAddress != null" >
         #{deviceDetailAddress,jdbcType=VARCHAR},
       </if>
-      <if test="maxChargeTimeDc != null">
+      <if test="maxChargeTimeDc != null" >
         #{maxChargeTimeDc,jdbcType=INTEGER},
       </if>
-      <if test="power1250w != null">
+      <if test="power1250w != null" >
         #{power1250w,jdbcType=INTEGER},
       </if>
-      <if test="power2350w != null">
+      <if test="power2350w != null" >
         #{power2350w,jdbcType=INTEGER},
       </if>
-      <if test="power3600w != null">
+      <if test="power3600w != null" >
         #{power3600w,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
+  <select id="countByExample" parameterType="com.example.leifeng.models.PriceinfoExample" resultType="java.lang.Integer" >
+    select count(*) from PriceInfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PriceInfo
+    <set >
+      <if test="record.shCode != null" >
+        sh_code = #{record.shCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.devType != null" >
+        dev_type = #{record.devType,jdbcType=INTEGER},
+      </if>
+      <if test="record.shUserId != null" >
+        sh_user_id = #{record.shUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.network != null" >
+        network = #{record.network,jdbcType=VARCHAR},
+      </if>
+      <if test="record.finishMinPower != null" >
+        finish_min_power = #{record.finishMinPower,jdbcType=INTEGER},
+      </if>
+      <if test="record.fees250w != null" >
+        fees_250W = #{record.fees250w,jdbcType=INTEGER},
+      </if>
+      <if test="record.fees350w != null" >
+        fees_350W = #{record.fees350w,jdbcType=INTEGER},
+      </if>
+      <if test="record.fees600w != null" >
+        fees_600W = #{record.fees600w,jdbcType=INTEGER},
+      </if>
+      <if test="record.feesDc != null" >
+        fees_dc = #{record.feesDc,jdbcType=INTEGER},
+      </if>
+      <if test="record.maxChargeTime != null" >
+        max_charge_time = #{record.maxChargeTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.canUse != null" >
+        can_use = #{record.canUse,jdbcType=INTEGER},
+      </if>
+      <if test="record.paymoneyFenPertimeNotvip != null" >
+        paymoney_fen_pertime_notvip = #{record.paymoneyFenPertimeNotvip,jdbcType=INTEGER},
+      </if>
+      <if test="record.paymoneyFenPertimeVip != null" >
+        paymoney_fen_pertime_vip = #{record.paymoneyFenPertimeVip,jdbcType=INTEGER},
+      </if>
+      <if test="record.finishTime != null" >
+        finish_time = #{record.finishTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.giveupTime != null" >
+        giveup_time = #{record.giveupTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.overloadPower != null" >
+        overload_power = #{record.overloadPower,jdbcType=INTEGER},
+      </if>
+      <if test="record.freeCharge != null" >
+        free_charge = #{record.freeCharge,jdbcType=INTEGER},
+      </if>
+      <if test="record.deviceProvinceAddress != null" >
+        device_province_address = #{record.deviceProvinceAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deviceCityAddress != null" >
+        device_city_address = #{record.deviceCityAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deviceAreaAddress != null" >
+        device_area_address = #{record.deviceAreaAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deviceDetailAddress != null" >
+        device_detail_address = #{record.deviceDetailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.maxChargeTimeDc != null" >
+        max_charge_time_dc = #{record.maxChargeTimeDc,jdbcType=INTEGER},
+      </if>
+      <if test="record.power1250w != null" >
+        power1_250W = #{record.power1250w,jdbcType=INTEGER},
+      </if>
+      <if test="record.power2350w != null" >
+        power2_350W = #{record.power2350w,jdbcType=INTEGER},
+      </if>
+      <if test="record.power3600w != null" >
+        power3_600W = #{record.power3600w,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PriceInfo
+    set id = #{record.id,jdbcType=INTEGER},
+      sh_code = #{record.shCode,jdbcType=INTEGER},
+      dev_type = #{record.devType,jdbcType=INTEGER},
+      sh_user_id = #{record.shUserId,jdbcType=VARCHAR},
+      network = #{record.network,jdbcType=VARCHAR},
+      finish_min_power = #{record.finishMinPower,jdbcType=INTEGER},
+      fees_250W = #{record.fees250w,jdbcType=INTEGER},
+      fees_350W = #{record.fees350w,jdbcType=INTEGER},
+      fees_600W = #{record.fees600w,jdbcType=INTEGER},
+      fees_dc = #{record.feesDc,jdbcType=INTEGER},
+      max_charge_time = #{record.maxChargeTime,jdbcType=INTEGER},
+      can_use = #{record.canUse,jdbcType=INTEGER},
+      paymoney_fen_pertime_notvip = #{record.paymoneyFenPertimeNotvip,jdbcType=INTEGER},
+      paymoney_fen_pertime_vip = #{record.paymoneyFenPertimeVip,jdbcType=INTEGER},
+      finish_time = #{record.finishTime,jdbcType=INTEGER},
+      giveup_time = #{record.giveupTime,jdbcType=INTEGER},
+      overload_power = #{record.overloadPower,jdbcType=INTEGER},
+      free_charge = #{record.freeCharge,jdbcType=INTEGER},
+      device_province_address = #{record.deviceProvinceAddress,jdbcType=VARCHAR},
+      device_city_address = #{record.deviceCityAddress,jdbcType=VARCHAR},
+      device_area_address = #{record.deviceAreaAddress,jdbcType=VARCHAR},
+      device_detail_address = #{record.deviceDetailAddress,jdbcType=VARCHAR},
+      max_charge_time_dc = #{record.maxChargeTimeDc,jdbcType=INTEGER},
+      power1_250W = #{record.power1250w,jdbcType=INTEGER},
+      power2_350W = #{record.power2350w,jdbcType=INTEGER},
+      power3_600W = #{record.power3600w,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select * from PriceInfo order by id offset #{param2}* #{param1} rows fetch next #{param2} rows only
+  </select>
+
 </mapper>
