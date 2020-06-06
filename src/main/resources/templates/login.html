@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>登录页面</title>
+    <link href="./plugins/layui/css/layui.css" rel="stylesheet" />
+    <script src="./plugins/layui/layui.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+</head>
+<!--<body>-->
+<!--<br>-->
+<!--<h3 style="color: red" th:text = "${msg}"></h3>-->
+<!--<form method="post" action="/lf/login">-->
+<!--    用户名：<input type="text" name="username"></br>-->
+<!--    密  码：<input type="password" name="password"></br>-->
+<!--    <input type="submit" value="提交">-->
+<!--</form>-->
+<!--</body>-->
+
+<body class="kit-login-bg">
+<div class="container demo-1">
+    <div class="content">
+        <div id="large-header" class="large-header">
+            <canvas id="demo-canvas"></canvas>
+            <div class="kit-login-box">
+                <header style="margin-left: 35%">
+                    <h1>充电桩管理后台登录</h1>
+                </header>
+                <div class="kit-login-main">
+                    <form action="/lf/login" class="layui-form" method="post">
+                        <div class="layui-form-item" style="width: 15%;margin-left: 35%">
+                            <label class="kit-login-icon">
+                                <i class="layui-icon">&#xe612;</i>
+                            </label>
+                            <input type="text" name="userid" lay-verify="required" autocomplete="off" placeholder="这里输入用户名." class="layui-input">
+                        </div>
+                        <div class="layui-form-item" style="width: 15%;margin-left: 35%">
+                            <label class="kit-login-icon">
+                                <i class="layui-icon">&#xe642;</i>
+                            </label>
+                            <input type="password" name="password" lay-verify="required" autocomplete="off" placeholder="这里输入密码." class="layui-input" value="123456">
+                        </div>
+                        <div class="layui-form-item" style="width: 15%;margin-left: 35%">
+                            <label class="kit-login-icon">
+                                <i class="layui-icon">&#xe642;</i>
+                            </label>
+                            <input type="number" name="validCode" lay-verify="required|number" autocomplete="off" placeholder="输入右侧计算结果." class="layui-input" value="9527">
+                            <span class="form-code" id="changeCode" style="position:absolute;right:2px; top:2px;">
+                                    <img src="./build/images/GetVerfiyCode.png" id="refImg" style="cursor:pointer;" title="点击刷新"/>
+                                </span>
+                        </div>
+                        <div class="layui-form-item" style="width: 15%;margin-left: 35%">
+                            <div class="kit-pull-left kit-login-remember">
+                                <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" checked title="记住帐号?">
+                            </div>
+                            <div class="kit-pull-right">
+                                <button class="layui-btn layui-btn-primary" lay-submit lay-filter="login">
+                                    <i class="fa fa-sign-in" aria-hidden="true"></i> 登录
+                                </button>
+                            </div>
+                            <div class="kit-clear"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    layui.use(['layer', 'form'], function() {
+        var layer = layui.layer,
+            $ = layui.jquery,
+            form = layui.form;
+
+        // form.on('submit(login)', function(data) {
+        //     $.ajax({
+        //         url: '/lf/login',
+        //         type: "post",
+        //         contentType:'application/json',
+        //         data:JSON.stringify(data.field),
+        //         success: function(data) {
+        //
+        //         },
+        //     });
+        //     return false;
+        // });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(
+        function() {
+            $("body").css("background-image","url(" + "/lf/images/2.jpg" + ")");
+    });
+</script>
+</body>
+</html>
