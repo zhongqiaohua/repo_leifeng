@@ -4,11 +4,17 @@ spring:
       charset: UTF-8
       force: true
       enabled: true
+  #  datasource:
+  #      url: jdbc:sqlserver://120.79.213.67:1433;DatabaseName=LeiFengCharge
+  #      driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  #      username: user
+  #      password: LeifengCharge#123456
+
   datasource:
-      url: jdbc:sqlserver://120.79.213.67:1433;DatabaseName=LeiFengCharge
-      driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-      username: user
-      password: LeifengCharge#123456
+    url: jdbc:sqlserver://localhost:1433;DatabaseName=LeiFengCharge
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    username: sa
+    password: Db20200603
   profiles:
     active: dev
   jpa:
@@ -22,3 +28,5 @@ mybatis:
   mapperLocations: classpath:mapper/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+

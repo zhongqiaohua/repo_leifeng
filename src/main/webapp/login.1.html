@@ -11,7 +11,7 @@
     </script>
     <link href="./plugins/layui/css/layui.css" rel="stylesheet" />
     <link href="./plugins/font-awesome/css/font-awesome.css" rel="stylesheet" />
-    <link href="./build/css/login.1.css" rel="stylesheet" />
+<!--    <link href="./build/css/login.1.css" rel="stylesheet" />-->
     <link href="./plugins/sideshow/css/normalize.css" rel="stylesheet" />
     <link href="./plugins/sideshow/css/demo.css" rel="stylesheet" />
     <link href="./plugins/sideshow/css/component.css" rel="stylesheet" />
@@ -84,24 +84,24 @@
             <div id="large-header" class="large-header">
                 <canvas id="demo-canvas"></canvas>
                 <div class="kit-login-box">
-                    <header>
+                    <header style="margin-left: 35%">
                         <h1>KITADMIN LOGIN</h1>
                     </header>
                     <div class="kit-login-main">
                         <form action="/" class="layui-form" method="post">
-                            <div class="layui-form-item">
+                            <div class="layui-form-item" style="width: 30%;margin-left: 35%">
                                 <label class="kit-login-icon">
                                     <i class="layui-icon">&#xe612;</i>
                                 </label>
-                                <input type="text" name="userName" lay-verify="required" autocomplete="off" placeholder="这里输入用户名." class="layui-input">
+                                <input type="text" name="userid" lay-verify="required" autocomplete="off" placeholder="这里输入用户名." class="layui-input">
                             </div>
-                            <div class="layui-form-item">
+                            <div class="layui-form-item" style="width: 30%;margin-left: 35%">
                                 <label class="kit-login-icon">
                                     <i class="layui-icon">&#xe642;</i>
                                 </label>
                                 <input type="password" name="password" lay-verify="required" autocomplete="off" placeholder="这里输入密码." class="layui-input">
                             </div>
-                            <div class="layui-form-item">
+                            <div class="layui-form-item" style="width: 30%;margin-left: 35%">
                                 <label class="kit-login-icon">
                                     <i class="layui-icon">&#xe642;</i>
                                 </label>
@@ -110,7 +110,7 @@
                                     <img src="./build/images/GetVerfiyCode.png" id="refImg" style="cursor:pointer;" title="点击刷新"/>
                                 </span>
                             </div>
-                            <div class="layui-form-item">
+                            <div class="layui-form-item" style="width: 30%;margin-left: 35%">
                                 <div class="kit-pull-left kit-login-remember">
                                     <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" checked title="记住帐号?">
                                 </div>
@@ -123,9 +123,9 @@
                             </div>
                         </form>
                     </div>
-                    <footer>
-                        <p>KIT ADMIN © <a href="http://blog.zhengjinfan.cn" style="color:white; font-size:18px;" target="_blank">www.zhengjinfan.cn</a></p>
-                    </footer>
+<!--                    <footer>-->
+<!--                        <p>KIT ADMIN © <a href="http://blog.zhengjinfan.cn" style="color:white; font-size:18px;" target="_blank">www.zhengjinfan.cn</a></p>-->
+<!--                    </footer>-->
                 </div>
             </div>
         </div>
@@ -157,7 +157,8 @@
                     var loadIndex = layer.load(2, {
                         shade: [0.3, '#333']
                     });
-                    location.href = '/';
+                    //location.href = '/lf';
+
                     // $.post(data.form.action, data.field, function(res) {
                     //     if (!res.rel) {
                     //         layer.msg(res.msg, {
@@ -174,7 +175,6 @@
                     return false;
                 });
             }());
-
         });
     </script>
 </body>

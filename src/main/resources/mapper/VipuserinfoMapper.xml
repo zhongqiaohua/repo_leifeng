@@ -1,218 +1,384 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.leifeng.dao.VipuserinfoMapper">
-  <resultMap id="BaseResultMap" type="com.example.leifeng.models.Vipuserinfo">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="userid" jdbcType="VARCHAR" property="userid" />
-    <result column="userName" jdbcType="VARCHAR" property="username" />
-    <result column="openid" jdbcType="VARCHAR" property="openid" />
-    <result column="passWord" jdbcType="VARCHAR" property="password" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="account" jdbcType="INTEGER" property="account" />
-    <result column="serialNo" jdbcType="INTEGER" property="serialno" />
-    <result column="isVip" jdbcType="VARCHAR" property="isvip" />
-    <result column="payTime" jdbcType="VARCHAR" property="paytime" />
-    <result column="allChargeMoney" jdbcType="INTEGER" property="allchargemoney" />
-    <result column="updateUseridSms" jdbcType="VARCHAR" property="updateuseridsms" />
-    <result column="updateUseridSmsTime" jdbcType="VARCHAR" property="updateuseridsmstime" />
-    <result column="updateUserid" jdbcType="INTEGER" property="updateuserid" />
-    <result column="registerTime" jdbcType="VARCHAR" property="registertime" />
-    <result column="payDeviceId" jdbcType="INTEGER" property="paydeviceid" />
-    <result column="gzgzh" jdbcType="INTEGER" property="gzgzh" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.leifeng.dao.VipuserinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.example.leifeng.models.Vipuserinfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="userName" property="username" jdbcType="VARCHAR" />
+    <result column="openid" property="openid" jdbcType="VARCHAR" />
+    <result column="passWord" property="password" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="INTEGER" />
+    <result column="serialNo" property="serialno" jdbcType="INTEGER" />
+    <result column="isVip" property="isvip" jdbcType="VARCHAR" />
+    <result column="payTime" property="paytime" jdbcType="VARCHAR" />
+    <result column="allChargeMoney" property="allchargemoney" jdbcType="INTEGER" />
+    <result column="updateUseridSms" property="updateuseridsms" jdbcType="VARCHAR" />
+    <result column="updateUseridSmsTime" property="updateuseridsmstime" jdbcType="VARCHAR" />
+    <result column="updateUserid" property="updateuserid" jdbcType="INTEGER" />
+    <result column="registerTime" property="registertime" jdbcType="VARCHAR" />
+    <result column="payDeviceId" property="paydeviceid" jdbcType="INTEGER" />
+    <result column="perms" property="perms" jdbcType="VARCHAR" />
   </resultMap>
-  <sql id="Base_Column_List">
-    id, userid, userName, openid, passWord, email, account, serialNo, isVip, payTime,
-    allChargeMoney, updateUseridSms, updateUseridSmsTime, updateUserid, registerTime,
-    payDeviceId, gzgzh
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, userid, userName, openid, passWord, email, account, serialNo, isVip, payTime, 
+    allChargeMoney, updateUseridSms, updateUseridSmsTime, updateUserid, registerTime, 
+    payDeviceId, perms
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.example.leifeng.models.VipuserinfoExample" >
     select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from VipUserInfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
     <include refid="Base_Column_List" />
     from VipUserInfo
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from VipUserInfo
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.example.leifeng.models.Vipuserinfo">
-    insert into VipUserInfo (id, userid, userName,
-      openid, passWord, email,
-      account, serialNo, isVip,
-      payTime, allChargeMoney, updateUseridSms,
-      updateUseridSmsTime, updateUserid, registerTime,
-      payDeviceId, gzgzh)
-    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR},
-      #{openid,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
-      #{account,jdbcType=INTEGER}, #{serialno,jdbcType=INTEGER}, #{isvip,jdbcType=VARCHAR},
-      #{paytime,jdbcType=VARCHAR}, #{allchargemoney,jdbcType=INTEGER}, #{updateuseridsms,jdbcType=VARCHAR},
-      #{updateuseridsmstime,jdbcType=VARCHAR}, #{updateuserid,jdbcType=INTEGER}, #{registertime,jdbcType=VARCHAR},
-      #{paydeviceid,jdbcType=INTEGER}, #{gzgzh,jdbcType=INTEGER})
+  <delete id="deleteByExample" parameterType="com.example.leifeng.models.VipuserinfoExample" >
+    delete from VipUserInfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.example.leifeng.models.Vipuserinfo" >
+    insert into VipUserInfo (id, userid, userName, 
+      openid, passWord, email, 
+      account, serialNo, isVip, 
+      payTime, allChargeMoney, updateUseridSms, 
+      updateUseridSmsTime, updateUserid, registerTime, 
+      payDeviceId, perms)
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{openid,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{account,jdbcType=INTEGER}, #{serialno,jdbcType=INTEGER}, #{isvip,jdbcType=VARCHAR}, 
+      #{paytime,jdbcType=VARCHAR}, #{allchargemoney,jdbcType=INTEGER}, #{updateuseridsms,jdbcType=VARCHAR}, 
+      #{updateuseridsmstime,jdbcType=VARCHAR}, #{updateuserid,jdbcType=INTEGER}, #{registertime,jdbcType=VARCHAR}, 
+      #{paydeviceid,jdbcType=INTEGER}, #{perms,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.example.leifeng.models.Vipuserinfo">
+  <insert id="insertSelective" parameterType="com.example.leifeng.models.Vipuserinfo" >
     insert into VipUserInfo
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         id,
       </if>
-      <if test="userid != null">
+      <if test="userid != null" >
         userid,
       </if>
-      <if test="username != null">
+      <if test="username != null" >
         userName,
       </if>
-      <if test="openid != null">
+      <if test="openid != null" >
         openid,
       </if>
-      <if test="password != null">
+      <if test="password != null" >
         passWord,
       </if>
-      <if test="email != null">
+      <if test="email != null" >
         email,
       </if>
-      <if test="account != null">
+      <if test="account != null" >
         account,
       </if>
-      <if test="serialno != null">
+      <if test="serialno != null" >
         serialNo,
       </if>
-      <if test="isvip != null">
+      <if test="isvip != null" >
         isVip,
       </if>
-      <if test="paytime != null">
+      <if test="paytime != null" >
         payTime,
       </if>
-      <if test="allchargemoney != null">
+      <if test="allchargemoney != null" >
         allChargeMoney,
       </if>
-      <if test="updateuseridsms != null">
+      <if test="updateuseridsms != null" >
         updateUseridSms,
       </if>
-      <if test="updateuseridsmstime != null">
+      <if test="updateuseridsmstime != null" >
         updateUseridSmsTime,
       </if>
-      <if test="updateuserid != null">
+      <if test="updateuserid != null" >
         updateUserid,
       </if>
-      <if test="registertime != null">
+      <if test="registertime != null" >
         registerTime,
       </if>
-      <if test="paydeviceid != null">
+      <if test="paydeviceid != null" >
         payDeviceId,
       </if>
-      <if test="gzgzh != null">
-        gzgzh,
+      <if test="perms != null" >
+        perms,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="userid != null">
+      <if test="userid != null" >
         #{userid,jdbcType=VARCHAR},
       </if>
-      <if test="username != null">
+      <if test="username != null" >
         #{username,jdbcType=VARCHAR},
       </if>
-      <if test="openid != null">
+      <if test="openid != null" >
         #{openid,jdbcType=VARCHAR},
       </if>
-      <if test="password != null">
+      <if test="password != null" >
         #{password,jdbcType=VARCHAR},
       </if>
-      <if test="email != null">
+      <if test="email != null" >
         #{email,jdbcType=VARCHAR},
       </if>
-      <if test="account != null">
+      <if test="account != null" >
         #{account,jdbcType=INTEGER},
       </if>
-      <if test="serialno != null">
+      <if test="serialno != null" >
         #{serialno,jdbcType=INTEGER},
       </if>
-      <if test="isvip != null">
+      <if test="isvip != null" >
         #{isvip,jdbcType=VARCHAR},
       </if>
-      <if test="paytime != null">
+      <if test="paytime != null" >
         #{paytime,jdbcType=VARCHAR},
       </if>
-      <if test="allchargemoney != null">
+      <if test="allchargemoney != null" >
         #{allchargemoney,jdbcType=INTEGER},
       </if>
-      <if test="updateuseridsms != null">
+      <if test="updateuseridsms != null" >
         #{updateuseridsms,jdbcType=VARCHAR},
       </if>
-      <if test="updateuseridsmstime != null">
+      <if test="updateuseridsmstime != null" >
         #{updateuseridsmstime,jdbcType=VARCHAR},
       </if>
-      <if test="updateuserid != null">
+      <if test="updateuserid != null" >
         #{updateuserid,jdbcType=INTEGER},
       </if>
-      <if test="registertime != null">
+      <if test="registertime != null" >
         #{registertime,jdbcType=VARCHAR},
       </if>
-      <if test="paydeviceid != null">
+      <if test="paydeviceid != null" >
         #{paydeviceid,jdbcType=INTEGER},
       </if>
-      <if test="gzgzh != null">
-        #{gzgzh,jdbcType=INTEGER},
+      <if test="perms != null" >
+        #{perms,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.example.leifeng.models.Vipuserinfo">
+  <select id="countByExample" parameterType="com.example.leifeng.models.VipuserinfoExample" resultType="java.lang.Integer" >
+    select count(*) from VipUserInfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
     update VipUserInfo
-    <set>
-      <if test="userid != null">
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userid != null" >
+        userid = #{record.userid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.username != null" >
+        userName = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.openid != null" >
+        openid = #{record.openid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null" >
+        passWord = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.account != null" >
+        account = #{record.account,jdbcType=INTEGER},
+      </if>
+      <if test="record.serialno != null" >
+        serialNo = #{record.serialno,jdbcType=INTEGER},
+      </if>
+      <if test="record.isvip != null" >
+        isVip = #{record.isvip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.paytime != null" >
+        payTime = #{record.paytime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.allchargemoney != null" >
+        allChargeMoney = #{record.allchargemoney,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateuseridsms != null" >
+        updateUseridSms = #{record.updateuseridsms,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateuseridsmstime != null" >
+        updateUseridSmsTime = #{record.updateuseridsmstime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateuserid != null" >
+        updateUserid = #{record.updateuserid,jdbcType=INTEGER},
+      </if>
+      <if test="record.registertime != null" >
+        registerTime = #{record.registertime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.paydeviceid != null" >
+        payDeviceId = #{record.paydeviceid,jdbcType=INTEGER},
+      </if>
+      <if test="record.perms != null" >
+        perms = #{record.perms,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update VipUserInfo
+    set id = #{record.id,jdbcType=INTEGER},
+      userid = #{record.userid,jdbcType=VARCHAR},
+      userName = #{record.username,jdbcType=VARCHAR},
+      openid = #{record.openid,jdbcType=VARCHAR},
+      passWord = #{record.password,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      account = #{record.account,jdbcType=INTEGER},
+      serialNo = #{record.serialno,jdbcType=INTEGER},
+      isVip = #{record.isvip,jdbcType=VARCHAR},
+      payTime = #{record.paytime,jdbcType=VARCHAR},
+      allChargeMoney = #{record.allchargemoney,jdbcType=INTEGER},
+      updateUseridSms = #{record.updateuseridsms,jdbcType=VARCHAR},
+      updateUseridSmsTime = #{record.updateuseridsmstime,jdbcType=VARCHAR},
+      updateUserid = #{record.updateuserid,jdbcType=INTEGER},
+      registerTime = #{record.registertime,jdbcType=VARCHAR},
+      payDeviceId = #{record.paydeviceid,jdbcType=INTEGER},
+      perms = #{record.perms,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.leifeng.models.Vipuserinfo" >
+    update VipUserInfo
+    <set >
+      <if test="userid != null" >
         userid = #{userid,jdbcType=VARCHAR},
       </if>
-      <if test="username != null">
+      <if test="username != null" >
         userName = #{username,jdbcType=VARCHAR},
       </if>
-      <if test="openid != null">
+      <if test="openid != null" >
         openid = #{openid,jdbcType=VARCHAR},
       </if>
-      <if test="password != null">
+      <if test="password != null" >
         passWord = #{password,jdbcType=VARCHAR},
       </if>
-      <if test="email != null">
+      <if test="email != null" >
         email = #{email,jdbcType=VARCHAR},
       </if>
-      <if test="account != null">
+      <if test="account != null" >
         account = #{account,jdbcType=INTEGER},
       </if>
-      <if test="serialno != null">
+      <if test="serialno != null" >
         serialNo = #{serialno,jdbcType=INTEGER},
       </if>
-      <if test="isvip != null">
+      <if test="isvip != null" >
         isVip = #{isvip,jdbcType=VARCHAR},
       </if>
-      <if test="paytime != null">
+      <if test="paytime != null" >
         payTime = #{paytime,jdbcType=VARCHAR},
       </if>
-      <if test="allchargemoney != null">
+      <if test="allchargemoney != null" >
         allChargeMoney = #{allchargemoney,jdbcType=INTEGER},
       </if>
-      <if test="updateuseridsms != null">
+      <if test="updateuseridsms != null" >
         updateUseridSms = #{updateuseridsms,jdbcType=VARCHAR},
       </if>
-      <if test="updateuseridsmstime != null">
+      <if test="updateuseridsmstime != null" >
         updateUseridSmsTime = #{updateuseridsmstime,jdbcType=VARCHAR},
       </if>
-      <if test="updateuserid != null">
+      <if test="updateuserid != null" >
         updateUserid = #{updateuserid,jdbcType=INTEGER},
       </if>
-      <if test="registertime != null">
+      <if test="registertime != null" >
         registerTime = #{registertime,jdbcType=VARCHAR},
       </if>
-      <if test="paydeviceid != null">
+      <if test="paydeviceid != null" >
         payDeviceId = #{paydeviceid,jdbcType=INTEGER},
       </if>
-      <if test="gzgzh != null">
-        gzgzh = #{gzgzh,jdbcType=INTEGER},
+      <if test="perms != null" >
+        perms = #{perms,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.example.leifeng.models.Vipuserinfo">
+  <update id="updateByPrimaryKey" parameterType="com.example.leifeng.models.Vipuserinfo" >
     update VipUserInfo
     set userid = #{userid,jdbcType=VARCHAR},
       userName = #{username,jdbcType=VARCHAR},
@@ -229,7 +395,7 @@
       updateUserid = #{updateuserid,jdbcType=INTEGER},
       registerTime = #{registertime,jdbcType=VARCHAR},
       payDeviceId = #{paydeviceid,jdbcType=INTEGER},
-      gzgzh = #{gzgzh,jdbcType=INTEGER}
+      perms = #{perms,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

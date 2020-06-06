@@ -230,6 +230,11 @@
                         parent.layer.closeAll();
                         parent.location.reload();
                     });
+                },
+                error:function(){
+                    parent.layer.alert("网点添加异常,请重试！",{icon:5},function () {
+                        parent.layer.closeAll();
+                    });
                 }
             });
             return false;

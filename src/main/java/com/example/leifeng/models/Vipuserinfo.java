@@ -1,4 +1,5 @@
 package com.example.leifeng.models;
+
 public class Vipuserinfo {
     private Integer id;
 
@@ -32,7 +33,7 @@ public class Vipuserinfo {
 
     private Integer paydeviceid;
 
-    private Integer gzgzh;
+    private String perms;
 
     public Integer getId() {
         return id;
@@ -162,11 +163,11 @@ public class Vipuserinfo {
         this.paydeviceid = paydeviceid;
     }
 
-    public Integer getGzgzh() {
-        return gzgzh;
+    public String getPerms() {
+        return perms;
     }
 
-    public void setGzgzh(Integer gzgzh) {
-        this.gzgzh = gzgzh;
+    public void setPerms(String perms) {
+        this.perms = perms == null ? null : perms.trim();
     }
 }

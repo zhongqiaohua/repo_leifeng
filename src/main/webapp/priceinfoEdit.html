@@ -163,6 +163,11 @@
                         parent.layer.closeAll();
                         parent.location.reload();
                     });
+                },
+                error:function(){
+                    parent.layer.alert("网点修改失败，请重试！",{icon:5},function(){
+                        parent.layer.closeAll();
+                    })
                 }
             });
             return false;
